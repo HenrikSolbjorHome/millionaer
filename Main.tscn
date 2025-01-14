@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdvmhv5vcbea1"]
+
+[ext_resource type="Script" path="res://Main.gd" id="1_c1hkb"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_c1hkb")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0.513726, 0.513726, 0.513726, 1)
