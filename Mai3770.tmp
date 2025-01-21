@@ -1,0 +1,193 @@
+[gd_scene load_steps=13 format=3 uid="uid://cdvmhv5vcbea1"]
+
+[ext_resource type="Script" path="res://Main.gd" id="1_c1hkb"]
+[ext_resource type="Texture2D" uid="uid://cx1c3nnlkcfnf" path="res://Kristiansund.png" id="2_3mq77"]
+[ext_resource type="Texture2D" uid="uid://lgstllkj4ugs" path="res://icon.svg" id="3_heh7a"]
+[ext_resource type="Texture2D" uid="uid://c3fx2pmbvgo1j" path="res://Svart-Bil – Kopi/Lyseblå-Bil.png" id="5_bsr08"]
+[ext_resource type="Script" path="res://Camera2D.gd" id="5_wlxq0"]
+[ext_resource type="Texture2D" uid="uid://s22ndrkix2tb" path="res://Svart-Bil – Kopi/Gul-Bil.png" id="6_llwdb"]
+[ext_resource type="Texture2D" uid="uid://dxreecjfj4i4" path="res://Svart-Bil – Kopi/Lysegrønn-Bil.png" id="7_70rcv"]
+[ext_resource type="Texture2D" uid="uid://b6nxtbvgiggqx" path="res://Svart-Bil – Kopi/Mørkegrønn-Bil.png" id="8_e0ntn"]
+[ext_resource type="Texture2D" uid="uid://bj1eq5l1wfsps" path="res://Svart-Bil – Kopi/Oransje-Bil.png" id="9_dpv6a"]
+[ext_resource type="Texture2D" uid="uid://dks4vqkpioq4d" path="res://Svart-Bil – Kopi/Rosa-Bil.png" id="10_o3lu6"]
+[ext_resource type="Texture2D" uid="uid://bi7sexhpfmur7" path="res://Svart-Bil – Kopi/Rød-Bil.png" id="11_fhs6k"]
+[ext_resource type="Texture2D" uid="uid://bb2olhua50yvm" path="res://Svart-Bil – Kopi/Svart-Bil.png" id="12_iw38e"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_c1hkb")
+
+[node name="Playercount" type="Sprite2D" parent="."]
+position = Vector2(-8717, 1459.66)
+scale = Vector2(39.0625, 38.646)
+texture = ExtResource("3_heh7a")
+
+[node name="2player" type="Button" parent="Playercount"]
+offset_left = -60.0
+offset_top = -60.0
+offset_right = -13.0
+offset_bottom = -29.0
+text = "2"
+metadata/_edit_use_anchors_ = true
+
+[node name="3player" type="Button" parent="Playercount"]
+offset_left = 10.0
+offset_top = -60.0
+offset_right = 57.0
+offset_bottom = -29.0
+text = "3"
+metadata/_edit_use_anchors_ = true
+
+[node name="4player" type="Button" parent="Playercount"]
+offset_left = -60.0
+offset_top = -28.0
+offset_right = -13.0
+offset_bottom = 3.0
+text = "4"
+metadata/_edit_use_anchors_ = true
+
+[node name="5player" type="Button" parent="Playercount"]
+offset_left = 10.0
+offset_top = -28.0
+offset_right = 57.0
+offset_bottom = 3.0
+text = "5"
+metadata/_edit_use_anchors_ = true
+
+[node name="Main menu" type="Sprite2D" parent="."]
+position = Vector2(-8686.33, -5354.32)
+scale = Vector2(15.9168, 15.9168)
+texture = ExtResource("3_heh7a")
+
+[node name="Button" type="Button" parent="Main menu"]
+offset_left = -25.382
+offset_top = -36.7536
+offset_right = 21.618
+offset_bottom = -5.75362
+text = "PLAY"
+metadata/_edit_use_anchors_ = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-8684.33, -5316.32)
+zoom = Vector2(0.5, 0.5)
+script = ExtResource("5_wlxq0")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(7000, 0)
+texture = ExtResource("2_3mq77")
+
+[node name="choose car" type="Sprite2D" parent="."]
+position = Vector2(-16757, 1459.66)
+scale = Vector2(39.0625, 38.646)
+texture = ExtResource("3_heh7a")
+
+[node name="bluecar" type="Button" parent="choose car"]
+offset_left = -60.0
+offset_top = -60.0
+offset_right = -13.0
+offset_bottom = -29.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="choose car/bluecar"]
+position = Vector2(23.623, 15.8127)
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("5_bsr08")
+
+[node name="yellowcar" type="Button" parent="choose car"]
+offset_left = 10.0
+offset_top = -60.0
+offset_right = 57.0
+offset_bottom = -29.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="choose car/yellowcar"]
+position = Vector2(23.3809, 15.5022)
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("6_llwdb")
+
+[node name="lightgreencar" type="Button" parent="choose car"]
+offset_left = -60.0
+offset_top = -28.0
+offset_right = -13.0
+offset_bottom = 3.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="choose car/lightgreencar"]
+position = Vector2(22.6484, 15.5107)
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("7_70rcv")
+
+[node name="darkgreencar" type="Button" parent="choose car"]
+offset_left = 10.0
+offset_top = -28.0
+offset_right = 57.0
+offset_bottom = 3.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="choose car/darkgreencar"]
+position = Vector2(23.125, 15.5107)
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("8_e0ntn")
+
+[node name="orangecar" type="Button" parent="choose car"]
+offset_left = -60.0
+offset_top = 4.0
+offset_right = -13.0
+offset_bottom = 35.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="choose car/orangecar"]
+position = Vector2(23.877, 16.0109)
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("9_dpv6a")
+
+[node name="pinkcar" type="Button" parent="choose car"]
+offset_left = 10.0
+offset_top = 4.0
+offset_right = 57.0
+offset_bottom = 35.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="choose car/pinkcar"]
+position = Vector2(23.125, 15.7521)
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("10_o3lu6")
+
+[node name="redcar" type="Button" parent="choose car"]
+offset_left = -60.0
+offset_top = 35.252
+offset_right = -13.0
+offset_bottom = 66.252
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="choose car/redcar"]
+position = Vector2(23.6738, 15.5771)
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("11_fhs6k")
+
+[node name="blackcar" type="Button" parent="choose car"]
+offset_left = 10.3424
+offset_top = 34.993
+offset_right = 57.3424
+offset_bottom = 65.993
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="choose car/blackcar"]
+position = Vector2(23.2188, 16.043)
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("12_iw38e")
+
+[connection signal="camera" from="." to="Camera2D" method="_on_node_2d_camera"]
+[connection signal="cameraMain" from="." to="Camera2D" method="_on_node_2d_camera_main"]
+[connection signal="button_up" from="Playercount/2player" to="." method="_on_button_button_up"]
+[connection signal="button_up" from="Playercount/3player" to="." method="_on_button_2_button_up"]
+[connection signal="button_up" from="Playercount/4player" to="." method="_on_button_3_button_up"]
+[connection signal="button_up" from="Playercount/5player" to="." method="_on_button_4_button_up"]
+[connection signal="button_up" from="Main menu/Button" to="Camera2D" method="_on_button_button_up"]
+[connection signal="button_up" from="choose car/bluecar" to="." method="_bluecar"]
+[connection signal="button_up" from="choose car/yellowcar" to="." method="_yellowcar"]
+[connection signal="button_up" from="choose car/lightgreencar" to="." method="_lightgreencar"]
+[connection signal="button_up" from="choose car/darkgreencar" to="." method="_darkgreencar"]
+[connection signal="button_up" from="choose car/orangecar" to="." method="_orangecar"]
+[connection signal="button_up" from="choose car/pinkcar" to="." method="_pinkcar"]
+[connection signal="button_up" from="choose car/redcar" to="." method="_redcar"]
+[connection signal="button_up" from="choose car/blackcar" to="." method="_blackcar"]
