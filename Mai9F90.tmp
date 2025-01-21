@@ -1,0 +1,87 @@
+[gd_scene load_steps=6 format=3 uid="uid://cdvmhv5vcbea1"]
+
+[ext_resource type="Script" path="res://Main.gd" id="1_c1hkb"]
+[ext_resource type="Texture2D" uid="uid://cx1c3nnlkcfnf" path="res://Kristiansund.png" id="2_3mq77"]
+[ext_resource type="Texture2D" uid="uid://lgstllkj4ugs" path="res://icon.svg" id="3_heh7a"]
+[ext_resource type="Script" path="res://Main menu.gd" id="4_o506l"]
+[ext_resource type="Script" path="res://Camera2D.gd" id="5_wlxq0"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_c1hkb")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_3mq77")
+
+[node name="Playercount" type="Sprite2D" parent="."]
+position = Vector2(-8717, 1459.66)
+scale = Vector2(39.0625, 38.646)
+texture = ExtResource("3_heh7a")
+
+[node name="Button" type="Button" parent="Playercount"]
+offset_left = -60.0
+offset_top = -60.0
+offset_right = -13.0
+offset_bottom = -29.0
+text = "2"
+
+[node name="Button2" type="Button" parent="Playercount"]
+offset_left = 10.0
+offset_top = -60.0
+offset_right = 57.0
+offset_bottom = -29.0
+text = "3"
+
+[node name="Button3" type="Button" parent="Playercount"]
+offset_left = -60.0
+offset_top = -28.0
+offset_right = -13.0
+offset_bottom = 3.0
+text = "4"
+
+[node name="Button4" type="Button" parent="Playercount"]
+offset_left = 10.0
+offset_top = -28.0
+offset_right = 57.0
+offset_bottom = 3.0
+text = "5"
+
+[node name="Button5" type="Button" parent="Playercount"]
+offset_left = -60.0
+offset_top = 4.0
+offset_right = -13.0
+offset_bottom = 35.0
+text = "6"
+
+[node name="Button6" type="Button" parent="Playercount"]
+offset_left = 10.0
+offset_top = 4.0
+offset_right = 57.0
+offset_bottom = 35.0
+text = "7"
+
+[node name="Button7" type="Button" parent="Playercount"]
+offset_left = -26.3936
+offset_top = 35.2519
+offset_right = 20.6064
+offset_bottom = 66.2519
+text = "8"
+
+[node name="Main menu" type="Sprite2D" parent="."]
+position = Vector2(-4958, -11)
+scale = Vector2(15.9168, 15.9168)
+texture = ExtResource("3_heh7a")
+script = ExtResource("4_o506l")
+
+[node name="Button" type="Button" parent="Main menu"]
+offset_left = -25.382
+offset_top = -36.7536
+offset_right = 21.618
+offset_bottom = -5.75362
+text = "PLAY"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-4979, -13)
+zoom = Vector2(0.57, 0.315)
+script = ExtResource("5_wlxq0")
+
+[connection signal="button_up" from="Main menu/Button" to="Camera2D" method="_on_button_button_up"]
