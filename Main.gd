@@ -4,6 +4,7 @@ var players
 var selected: int
 var carlist = []
 var active = true
+var currentPlayer = 0
 
 signal camera
 signal cameraMain
@@ -22,8 +23,8 @@ var rng2 = RandomNumberGenerator.new()
 
 var radius: float = 5200 # Radius of the circle
 var center: Vector2 = Vector2(7000, 0) # Center of the circle
-var angle: float = -9 
-var current_position: int = 23
+var angle: float = -9
+var current_position: int = 0
 
 func _ready():
 	pass
@@ -100,12 +101,17 @@ func car():
 				blackcar.position = startpos
 		startpos -= Vector2(-80, 190)
 
-func moveCar(car, result):
+func moveCar(car):
+	var die1 = rng1.randi_range(1,6)
+	var die2 = rng2.randi_range(1,6)
+	var result = die1+die2
+	print(die1," ", die2)
+	print(result)
 	current_position = (current_position + result) % 40
 	if current_position < 0:
 		current_position += 40
 	print("current", current_position)
-	var angle = (current_position) * (9)
+	var angle = (current_position+23) * (9)
 	var rad_angle = deg_to_rad(angle)
 	# Calculate new position
 	var x = center.x + radius * cos(rad_angle+4.5)
@@ -156,13 +162,35 @@ func _blackcar():
 		if !carlist.has("blackcar"):
 			carlist.append("blackcar")
 			selected += 1
-			
 
 
 func _on_roll_dice_button_up():
-	var die1 = rng1.randi_range(1,6)
-	var die2 = rng2.randi_range(1,6)
-	var result = die1+die2
-	print(die1," ", die2)
-	print(result)
-	moveCar(bluecar, result)
+	
+	match carlist[currentPlayer]:
+		"bluecar":
+			moveCar(bluecar)
+			currentPlayer += 1
+		"yellowcar":
+			moveCar(yellowcar)
+			currentPlayer += 1
+		"lightgreencar":
+			moveCar(lightgreencar)
+			currentPlayer += 1
+		"darkgreencar":
+			moveCar(darkgreencar)
+			currentPlayer += 1
+		"orangecar":
+			moveCar(orangecar)
+			currentPlayer += 1
+		"pinkcar":
+			moveCar(pinkcar)
+			currentPlayer += 1
+		"redcar":
+			moveCar(redcar)
+			currentPlayer += 1
+		"blackcar":
+			moveCar(blackcar)
+			currentPlayer += 1
+	print("currentplayer",currentPlayer)
+	if currentPlayer >= players:
+		currentPlayer = 0
