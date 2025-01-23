@@ -8,6 +8,7 @@ var active = true
 var currentPlayer = 0
 var playerPos = []
 var pressed: int
+var street = []
 
 signal camera
 signal cameraMain
@@ -87,17 +88,17 @@ class streetRow extends streets:
 			if money >= rent:
 				match houses:
 					0:
-						return money-rent
+						money = money-rent
 					1:
-						return money-house1
+						money = money-house1
 					2:
-						return money-house2
+						money = money-house2
 					3:
-						return money-house3
+						money = money-house3
 					4:
-						return money-house4
+						money = money-house4
 					5:
-						return money-house5
+						money = money-house5
 		elif !owner:
 			pass #TODO: try to allow for bying of streets
 class streetSpecial extends streets:
@@ -154,7 +155,7 @@ class streetLuck extends streets:
 
 func _ready():
 	#				owner, street number, row, rownumbers, rent, house1, house2, house3, house4, house5, pledged
-	var streets = [
+	street = [
 		streetRow.new(false, 2, 1, [2,3], 200, 1000, 3000, 9000, 16000, 25000, false, 6000),
 		streetRow.new(false, 3, 1, [2,3], 400, 2000, 6000, 18000, 32000, 45000, false, 6000),
 		streetSpecial.new(false, 6, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000),
@@ -291,7 +292,9 @@ func moveCar(car, result):
 	car.rotation_degrees = angle - angle*2
 	print(angle)
 	print(angle - angle*2)
-	playerList[currentPlayer].playerPos = current_position
+	playerList[currentPlayer-1].playerPos = current_position
+	
+
 func _bluecar():
 	if !selected == players:
 		if !carlist.has("bluecar"):
@@ -352,33 +355,44 @@ func _on_roll_dice_button_up():
 		"bluecar":
 			moveCar(bluecar, result)
 			currentPlayer += 1
+			checkStreet()
 		"yellowcar":
 			moveCar(yellowcar, result)
 			currentPlayer += 1
+			checkStreet()
 		"lightgreencar":
 			moveCar(lightgreencar, result)
 			currentPlayer += 1
+			checkStreet()
 		"darkgreencar":
 			moveCar(darkgreencar, result)
 			currentPlayer += 1
+			checkStreet()
 		"orangecar":
 			moveCar(orangecar, result)
 			currentPlayer += 1
+			checkStreet()
 		"pinkcar":
 			moveCar(pinkcar, result)
 			currentPlayer += 1
+			checkStreet()
 		"redcar":
 			moveCar(redcar, result)
 			currentPlayer += 1
+			checkStreet()
 		"blackcar":
 			moveCar(blackcar, result)
 			currentPlayer += 1
+			checkStreet()
 	print("currentplayer",currentPlayer)
 	if currentPlayer >= players:
 		currentPlayer = 0
 	
 	
-
-
+func checkStreet():
+	current_position = playerList[currentPlayer-1].playerPos
+	print(current_position)
+	var current_street = street[current_position].streetNumber
+	print("currentstreet", current_street)
 func _buy():
 	pressed = 1
