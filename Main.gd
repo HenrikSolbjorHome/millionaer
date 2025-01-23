@@ -1,11 +1,13 @@
 extends Node2D
 
-var players = []
-var selected: int
+var players
+var playerList = []
+var selected = 0
 var carlist = []
 var active = true
 var currentPlayer = 0
 var playerPos = []
+var pressed: int
 
 signal camera
 signal cameraMain
@@ -28,6 +30,9 @@ var angle: float = -9
 var current_position: int = 0
 
 
+###################### Classes ######################
+
+
 class player:
 	var money = 150000
 	var skipturns: int
@@ -40,9 +45,10 @@ class player:
 		playerPos = 11
 		skipturns = 3
 		
+	
+	
 	#TODO: move function here or in card class
-	func _init(_car):
-		car = _car
+	
 class streets:
 	var streetNumber: int
 	var owner: int
@@ -53,6 +59,8 @@ class streets:
 class streetRow extends streets:
 	var row: int
 	var rowNumbers = []
+	var houses: int
+	var price: int
 	var rent: int
 	var house1: int
 	var house2: int
@@ -61,7 +69,7 @@ class streetRow extends streets:
 	var house5: int
 	var pledged: bool
 	
-	func _init(_owner, _streetNumber, _row, _rowNumbers, _rent, _house1, _house2, _house3, _house4, _house5, _pledged):
+	func _init(_owner, _streetNumber, _row, _rowNumbers, _rent, _house1, _house2, _house3, _house4, _house5, _pledged, _price):
 		owner = _owner
 		streetNumber = _streetNumber
 		row = row
@@ -73,18 +81,35 @@ class streetRow extends streets:
 		house4 = _house4
 		house5 = _house5
 		pledged = _pledged
-	func onEnter():
-		pass #TODO: draw pay or buy
-		
+		price = _price
+	func onEnter(currentPlayer, money):
+		if currentPlayer != owner:
+			if money >= rent:
+				match houses:
+					0:
+						return money-rent
+					1:
+						return money-house1
+					2:
+						return money-house2
+					3:
+						return money-house3
+					4:
+						return money-house4
+					5:
+						return money-house5
+		elif !owner:
+			pass #TODO: try to allow for bying of streets
 class streetSpecial extends streets:
 	var rowNumbers = []
+	var price: int
 	var one: int
 	var two: int
 	var three: int
 	var four: int
 	var pledged: bool
 	
-	func _init(_owner, _streetNumber, _rowNumbers, _one, _two, _three, _four, _pledged):
+	func _init(_owner, _streetNumber, _rowNumbers, _one, _two, _three, _four, _pledged, _price):
 		owner = _owner
 		streetNumber = _streetNumber
 		rowNumbers = _rowNumbers
@@ -93,23 +118,26 @@ class streetSpecial extends streets:
 		three = _three
 		four = _four
 		pledged = _pledged
+		price = _price
 	
 	func onEnter():
 		pass #TODO: pay or buy
 	
 class streetAirport extends streets:
 	var rowNumbers = []
+	var price: int
 	var one: int
 	var two: int
 	var pledged: bool
 	
-	func _init(_owner, _streetNumber, _rowNumbers, _one, _two, _pledged):
+	func _init(_owner, _streetNumber, _rowNumbers, _one, _two, _pledged, _price):
 		owner = _owner
 		streetNumber = _streetNumber
 		rowNumbers = _rowNumbers
 		one = _one
 		two = _two
 		pledged = _pledged
+		price = _price
 	
 	func onEnter():
 		pass #TODO: draw card
@@ -119,37 +147,42 @@ class streetLuck extends streets:
 	func onEnter():
 		pass #TODO: draw card
 
+
+
+
+
+
 func _ready():
 	#				owner, street number, row, rownumbers, rent, house1, house2, house3, house4, house5, pledged
 	var streets = [
-		streetRow.new(false, 2, 1, [2,3], 200, 1000, 3000, 9000, 16000, 25000, false),
-		streetRow.new(false, 3, 1, [2,3], 400, 2000, 6000, 18000, 32000, 45000, false),
-		streetSpecial.new(false, 6, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false),
-		streetRow.new(false, 7, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false),
-		streetRow.new(false, 9, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false),
-		streetRow.new(false, 10, 2, [7,9,10],800, 4000, 10000, 30000, 45000, 60000, false),
-		streetRow.new(false, 12, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false),
-		streetAirport.new(false, 13, [13, 29], 400, 1000, false),
-		streetRow.new(false, 14, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false),
-		streetRow.new(false, 15, 3, [12, 14, 15], 1200, 6000, 18000, 50000, 70000, 90000, false),
-		streetSpecial.new(false, 16, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false),
-		streetRow.new(false, 17, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false),
-		streetRow.new(false, 19, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false),
-		streetRow.new(false, 20, 4, [17, 19, 20], 1600, 8000, 22000, 60000, 80000, 100000, false),
-		streetRow.new(false, 22, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false),
-		streetRow.new(false, 24, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false),
-		streetRow.new(false, 25, 5, [22, 24, 25], 2000, 10000, 30000, 75000, 92500, 110000, false),
-		streetSpecial.new(false, 26, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false),
-		streetRow.new(false, 27, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false),
-		streetRow.new(false, 28, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false),
-		streetAirport.new(false, 29, [13, 29], 400, 1000, false),
-		streetRow.new(false, 30, 6, [27, 28, 30], 2400, 12000, 36000, 85000, 102000, 120000, false),
-		streetRow.new(false, 32, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false),
-		streetRow.new(false, 33, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false),
-		streetRow.new(false, 35, 7, [32, 33, 35], 2800, 15000, 45000, 100000, 120000, 140000, false),
-		streetSpecial.new(false, 36, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false),
-		streetRow.new(false, 38, 8, [38, 40], 3500, 17500, 50000, 110000, 130000, 150000, false),
-		streetRow.new(false, 40, 8, [38, 40], 5000, 20000, 60000, 140000, 170000, 200000, false)
+		streetRow.new(false, 2, 1, [2,3], 200, 1000, 3000, 9000, 16000, 25000, false, 6000),
+		streetRow.new(false, 3, 1, [2,3], 400, 2000, 6000, 18000, 32000, 45000, false, 6000),
+		streetSpecial.new(false, 6, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000),
+		streetRow.new(false, 7, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000),
+		streetRow.new(false, 9, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000),
+		streetRow.new(false, 10, 2, [7,9,10],800, 4000, 10000, 30000, 45000, 60000, false, 12000),
+		streetRow.new(false, 12, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000),
+		streetAirport.new(false, 13, [13, 29], 400, 1000, false, 15000),
+		streetRow.new(false, 14, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000),
+		streetRow.new(false, 15, 3, [12, 14, 15], 1200, 6000, 18000, 50000, 70000, 90000, false, 16000),
+		streetSpecial.new(false, 16, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000),
+		streetRow.new(false, 17, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000),
+		streetRow.new(false, 19, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000),
+		streetRow.new(false, 20, 4, [17, 19, 20], 1600, 8000, 22000, 60000, 80000, 100000, false, 20000),
+		streetRow.new(false, 22, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000),
+		streetRow.new(false, 24, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000),
+		streetRow.new(false, 25, 5, [22, 24, 25], 2000, 10000, 30000, 75000, 92500, 110000, false, 24000),
+		streetSpecial.new(false, 26, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000),
+		streetRow.new(false, 27, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000),
+		streetRow.new(false, 28, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000),
+		streetAirport.new(false, 29, [13, 29], 400, 1000, false, 15000),
+		streetRow.new(false, 30, 6, [27, 28, 30], 2400, 12000, 36000, 85000, 102000, 120000, false, 28000),
+		streetRow.new(false, 32, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000),
+		streetRow.new(false, 33, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000),
+		streetRow.new(false, 35, 7, [32, 33, 35], 2800, 15000, 45000, 100000, 120000, 140000, false, 32000),
+		streetSpecial.new(false, 36, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000),
+		streetRow.new(false, 38, 8, [38, 40], 3500, 17500, 50000, 110000, 130000, 150000, false, 35000),
+		streetRow.new(false, 40, 8, [38, 40], 5000, 20000, 60000, 140000, 170000, 200000, false, 40000)
 	]
 	
 func _process(delta):
@@ -163,15 +196,28 @@ func _process(delta):
 		car()
 		
 func _on_button_button_up():
+	playerList.append(player.new())
+	playerList.append(player.new())
 	players = 2
-
 func _on_button_2_button_up():
+	playerList.append(player.new())
+	playerList.append(player.new())
+	playerList.append(player.new())
 	players = 3
-
+	
 func _on_button_3_button_up():
+	playerList.append(player.new())
+	playerList.append(player.new())
+	playerList.append(player.new())
+	playerList.append(player.new())
 	players = 4
 
 func _on_button_4_button_up():
+	playerList.append(player.new())
+	playerList.append(player.new())
+	playerList.append(player.new())
+	playerList.append(player.new())
+	playerList.append(player.new())
 	players = 5
 
 func car():
@@ -229,7 +275,7 @@ func car():
 		startpos -= Vector2(-80, 190)
 
 func moveCar(car, result):
-	current_position = playerPos[currentPlayer]
+	current_position = playerList[currentPlayer].playerPos
 	current_position = (current_position + result) % 40
 	if current_position < 0:
 		current_position += 40
@@ -245,48 +291,55 @@ func moveCar(car, result):
 	car.rotation_degrees = angle - angle*2
 	print(angle)
 	print(angle - angle*2)
-	playerPos.insert(currentPlayer, current_position)
-	
+	playerList[currentPlayer].playerPos = current_position
 func _bluecar():
 	if !selected == players:
 		if !carlist.has("bluecar"):
 			carlist.append("bluecar")
 			selected += 1
+			playerList[selected-1].car = "bluecar"
 func _yellowcar():
-	if !selected == players:	
+	if !selected == players:
 		if !carlist.has("yellowcar"):
 			carlist.append("yellowcar")
 			selected += 1
+			playerList[selected-1].car = "yellowcar"
 func _lightgreencar():
 	if !selected == players:
 		if !carlist.has("lightgreencar"):
 			carlist.append("lightgreencar")
 			selected += 1
+			playerList[selected-1].car = "lightgreencar"
 func _darkgreencar():
 	if !selected == players:
 		if !carlist.has("darkgreencar"):
 			carlist.append("darkgreencar")
 			selected += 1
+			playerList[selected-1].car = "darkgreencar"
 func _orangecar():
 	if !selected == players:
 		if !carlist.has("orangecar"):
 			carlist.append("orangecar")
 			selected += 1
+			playerList[selected-1].car = "orangecar"
 func _pinkcar():
 	if !selected == players:
 		if !carlist.has("pinkcar"):
 			carlist.append("pinkcar")
 			selected += 1
+			playerList[selected-1].car = "pinkcar"
 func _redcar():
 	if !selected == players:
 		if !carlist.has("redcar"):
 			carlist.append("redcar")
 			selected += 1
+			playerList[selected-1].car = "redcar"
 func _blackcar():
 	if !selected == players:
 		if !carlist.has("blackcar"):
 			carlist.append("blackcar")
 			selected += 1
+			playerList[selected-1].car = "blackcar"
 
 
 func _on_roll_dice_button_up():
@@ -295,7 +348,7 @@ func _on_roll_dice_button_up():
 	var result = die1+die2
 	print(die1," ", die2)
 	print(result)
-	match carlist[currentPlayer]:
+	match playerList[currentPlayer].car:
 		"bluecar":
 			moveCar(bluecar, result)
 			currentPlayer += 1
@@ -323,3 +376,9 @@ func _on_roll_dice_button_up():
 	print("currentplayer",currentPlayer)
 	if currentPlayer >= players:
 		currentPlayer = 0
+	
+	
+
+
+func _buy():
+	pressed = 1

@@ -185,15 +185,6 @@ offset_bottom = 3384.0
 theme_override_font_sizes/font_size = 500
 text = "Roll dice"
 
-[node name="Buy" type="Button" parent="."]
-unique_name_in_owner = true
-offset_left = 6679.0
-offset_top = 5882.0
-offset_right = 7602.0
-offset_bottom = 6572.0
-theme_override_font_sizes/font_size = 500
-text = "Buy"
-
 [connection signal="camera" from="." to="Camera2D" method="_on_node_2d_camera"]
 [connection signal="cameraMain" from="." to="Camera2D" method="_on_node_2d_camera_main"]
 [connection signal="button_up" from="Playercount/2player" to="." method="_on_button_button_up"]
@@ -210,4 +201,3 @@ text = "Buy"
 [connection signal="button_up" from="choose car/redcar" to="." method="_redcar"]
 [connection signal="button_up" from="choose car/blackcar" to="." method="_blackcar"]
 [connection signal="button_up" from="rollDice" to="." method="_on_roll_dice_button_up"]
-[connection signal="button_up" from="Buy" to="." method="_buy"]
