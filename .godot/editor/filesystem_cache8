@@ -1,24 +1,24 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1737540117
-blåbil.png::CompressedTexture2D::5579364637064190062::1737532712::1737532712::1::::<><>::
-Camera2D.gd::GDScript::-1::1737532712::0::1::::<>Camera2D<>::
-grønnbil.png::CompressedTexture2D::3489480249290645247::1737532712::1737532712::1::::<><>::
-grønnerebil.png::CompressedTexture2D::4837578308846979649::1737532712::1737532712::1::::<><>::
-gulbil.png::CompressedTexture2D::4890245229285841834::1737532712::1737532712::1::::<><>::
-icon.svg::CompressedTexture2D::785590977713948838::1737532712::1737532770::1::::<><>::
-Kristiansund.png::CompressedTexture2D::6441030732280618275::1737532712::1737532712::1::::<><>::
-Main.gd::GDScript::-1::1737532712::0::1::::<>Node2D<>::
-Main.tscn::PackedScene::5027502085897432434::1737532906::0::1::::<><>::res://Main.gd<>uid://cx1c3nnlkcfnf::::res://Kristiansund.png<>uid://lgstllkj4ugs::::res://icon.svg<>uid://c3fx2pmbvgo1j::::res://Svart-Bil – Kopi/Lyseblå-Bil.png<>res://Camera2D.gd<>uid://s22ndrkix2tb::::res://Svart-Bil – Kopi/Gul-Bil.png<>uid://dxreecjfj4i4::::res://Svart-Bil – Kopi/Lysegrønn-Bil.png<>uid://b6nxtbvgiggqx::::res://Svart-Bil – Kopi/Mørkegrønn-Bil.png<>uid://bj1eq5l1wfsps::::res://Svart-Bil – Kopi/Oransje-Bil.png<>uid://dks4vqkpioq4d::::res://Svart-Bil – Kopi/Rosa-Bil.png<>uid://bi7sexhpfmur7::::res://Svart-Bil – Kopi/Rød-Bil.png<>uid://bb2olhua50yvm::::res://Svart-Bil – Kopi/Svart-Bil.png
-oransjebil.png::CompressedTexture2D::8149656938757335254::1737532712::1737532712::1::::<><>::
-rosabil.png::CompressedTexture2D::5110572254192204158::1737532712::1737532712::1::::<><>::
-rødbil.png::CompressedTexture2D::6235544017117422466::1737532712::1737532712::1::::<><>::
-svartbil.png::CompressedTexture2D::4484420611569251497::1737532712::1737532712::1::::<><>::
-::res://Svart-Bil – Kopi/::1737532891
-Gul-Bil.png::CompressedTexture2D::1320800143267361323::1737532712::1737532712::1::::<><>::
-Lyseblå-Bil.png::CompressedTexture2D::6749896391752125141::1737532712::1737532712::1::::<><>::
-Lysegrønn-Bil.png::CompressedTexture2D::259086764909118937::1737532712::1737532712::1::::<><>::
-Mørkegrønn-Bil.png::CompressedTexture2D::4590542253440493183::1737532712::1737532712::1::::<><>::
-Oransje-Bil.png::CompressedTexture2D::3072067132618782048::1737532712::1737532712::1::::<><>::
-Rosa-Bil.png::CompressedTexture2D::7900108438009371501::1737532712::1737532712::1::::<><>::
-Rød-Bil.png::CompressedTexture2D::3015092789512081538::1737532712::1737532712::1::::<><>::
-Svart-Bil.png::CompressedTexture2D::2513217806923072222::1737532712::1737532712::1::::<><>::
+::res://::1737560350
+blåbil.png::CompressedTexture2D::5579364637064190062::1737556500::1737556560::1::::<><>::
+Camera2D.gd::GDScript::-1::1737556560::0::1::::<>Camera2D<>::
+grønnbil.png::CompressedTexture2D::3489480249290645247::1737556560::1737556560::1::::<><>::
+grønnerebil.png::CompressedTexture2D::4837578308846979649::1737556560::1737556560::1::::<><>::
+gulbil.png::CompressedTexture2D::4890245229285841834::1737556560::1737556560::1::::<><>::
+icon.svg::CompressedTexture2D::785590977713948838::1737556560::1737556560::1::::<><>::
+Kristiansund.png::CompressedTexture2D::6441030732280618275::1737556620::1737556620::1::::<><>::
+Main.gd::GDScript::-1::1737556620::0::1::::<>Node2D<>::
+Main.tscn::PackedScene::5027502085897432434::1737556620::0::1::::<><>::res://Main.gd<>uid://cx1c3nnlkcfnf::::res://Kristiansund.png<>uid://lgstllkj4ugs::::res://icon.svg<>uid://c3fx2pmbvgo1j::::res://Svart-Bil – Kopi/Lyseblå-Bil.png<>res://Camera2D.gd<>uid://s22ndrkix2tb::::res://Svart-Bil – Kopi/Gul-Bil.png<>uid://dxreecjfj4i4::::res://Svart-Bil – Kopi/Lysegrønn-Bil.png<>uid://b6nxtbvgiggqx::::res://Svart-Bil – Kopi/Mørkegrønn-Bil.png<>uid://bj1eq5l1wfsps::::res://Svart-Bil – Kopi/Oransje-Bil.png<>uid://dks4vqkpioq4d::::res://Svart-Bil – Kopi/Rosa-Bil.png<>uid://bi7sexhpfmur7::::res://Svart-Bil – Kopi/Rød-Bil.png<>uid://bb2olhua50yvm::::res://Svart-Bil – Kopi/Svart-Bil.png
+oransjebil.png::CompressedTexture2D::8149656938757335254::1737556620::1737556620::1::::<><>::
+rosabil.png::CompressedTexture2D::5110572254192204158::1737556620::1737556620::1::::<><>::
+rødbil.png::CompressedTexture2D::6235544017117422466::1737556620::1737556620::1::::<><>::
+svartbil.png::CompressedTexture2D::4484420611569251497::1737556620::1737556620::1::::<><>::
+::res://Svart-Bil – Kopi/::1737560335
+Gul-Bil.png::CompressedTexture2D::1320800143267361323::1737556560::1737556560::1::::<><>::
+Lyseblå-Bil.png::CompressedTexture2D::6749896391752125141::1737556560::1737556560::1::::<><>::
+Lysegrønn-Bil.png::CompressedTexture2D::259086764909118937::1737556560::1737556560::1::::<><>::
+Mørkegrønn-Bil.png::CompressedTexture2D::4590542253440493183::1737556560::1737556560::1::::<><>::
+Oransje-Bil.png::CompressedTexture2D::3072067132618782048::1737556560::1737556560::1::::<><>::
+Rosa-Bil.png::CompressedTexture2D::7900108438009371501::1737556560::1737556560::1::::<><>::
+Rød-Bil.png::CompressedTexture2D::3015092789512081538::1737556560::1737556560::1::::<><>::
+Svart-Bil.png::CompressedTexture2D::2513217806923072222::1737556560::1737556560::1::::<><>::
