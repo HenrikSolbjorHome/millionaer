@@ -3,20 +3,33 @@ extends Node2D
 @onready var buyButton = $Buy
 @onready var rollDiceButton = $rollDice
 @onready var auctionButton = $Auction
+@onready var doneButton = $Done
 
 var players
 var playerList = []
+var playerlists = []
+var cardList = []
+var usedCardList = []
 var selected = 0
 var carlist = []
 var active = true
 var currentPlayer = 0
-var playerPos = []
 var pressed: int
 var street = []
 var boatsOwned: int
+var airportsOwned: int
+var result: int
+
+
 
 signal camera
 signal cameraMain
+
+var player1
+var player2
+var player3
+var player4
+var player5
 
 var bluecar = Sprite2D.new()
 var yellowcar = Sprite2D.new()
@@ -29,9 +42,10 @@ var blackcar = Sprite2D.new()
 
 var rng1 = RandomNumberGenerator.new()
 var rng2 = RandomNumberGenerator.new()
+var rngCard = RandomNumberGenerator.new()
 
 var radius: float = 5200 # Radius of the circle
-var center: Vector2 = Vector2(7000, 0) # Center of the circle
+var center: Vector2 = Vector2(0, 0) # Center of the circle
 var angle: float = -9
 var current_position: int = 0
 
@@ -40,20 +54,15 @@ var current_position: int = 0
 
 
 class player:
-	var money = 150000
-	var skipturns: int
+	var money = 150_000
+	var skipTurns: int
 	var playerPos: int
+	var lastPos: int
 	var freePark: bool
 	var cards = []
 	var car
+	var inJail: bool = false
 	
-	func jail():
-		playerPos = 11
-		skipturns = 3
-		
-	
-	
-	#TODO: move function here or in card class
 	
 class streets:
 	var streetNumber: int
@@ -77,8 +86,8 @@ class streetRow extends streets:
 	var house5: int
 	var pledged: bool
 	var type = "Street"
-	
-	func _init(_owner, _streetNumber, _row, _rowNumbers, _rent, _house1, _house2, _house3, _house4, _house5, _pledged, _price):
+	var housePrice: int
+	func _init(_owner, _streetNumber, _row, _rowNumbers, _rent, _house1, _house2, _house3, _house4, _house5, _pledged, _price, _housePrice):
 		owner = _owner
 		streetNumber = _streetNumber
 		row = row
@@ -91,6 +100,7 @@ class streetRow extends streets:
 		house5 = _house5
 		pledged = _pledged
 		price = _price
+		housePrice = _housePrice
 		
 class streetSpecial extends streets:
 	var rowNumbers = []
@@ -146,61 +156,89 @@ class misc extends streets:
 		streetNumber = _streetNumber
 		type = _type
 
+class cards:
+	var type
+	var amount
+	var message
+	func _init(_type, _amount, _message):
+		type = _type
+		amount = _amount
+		message = _message
+		
+
 func _ready():
 	#				owner, street number, row, rownumbers, rent, house1, house2, house3, house4, house5, pledged
 	street = [
 			misc.new(1, "start"),
-			streetRow.new(0, 2, 1, [2,3], 200, 1000, 3000, 9000, 16000, 25000, false, 6000),
+			streetRow.new(false, 2, 1, [2,3], 200, 1000, 3000, 9000, 16000, 25000, false, 6000, 5000),
 			streetLuck.new(3),
-			streetRow.new(0, 4, 1, [2,3], 400, 2000, 6000, 18000, 32000, 45000, false, 6000),
+			streetRow.new(false, 4, 1, [2,3], 400, 2000, 6000, 18000, 32000, 45000, false, 6000, 5000),
 			misc.new(5, "tax10"),
 			streetSpecial.new(false, 6, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000),
-			streetRow.new(0, 7, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000),
-			streetRow.new(0, 8, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000),
+			streetRow.new(false, 7, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000, 5000),
+			streetRow.new(false, 8, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000, 5000),
 			streetLuck.new(9),
-			streetRow.new(0, 10, 2, [7,9,10],800, 4000, 10000, 30000, 45000, 60000, false, 12000),
+			streetRow.new(false, 10, 2, [7,9,10],800, 4000, 10000, 30000, 45000, 60000, false, 12000, 5000),
 			misc.new(11, "jail"),
-			streetRow.new(0, 12, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000),
-			streetRow.new(0, 13, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000),
+			streetRow.new(false, 12, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000, 10000),
+			streetRow.new(false, 13, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000, 10000),
 			streetAirport.new(false, 14, [13, 29], 400, 1000, false, 15000),
-			streetRow.new(0, 15, 3, [12, 14, 15], 1200, 6000, 18000, 50000, 70000, 90000, false, 16000),
+			streetRow.new(false, 15, 3, [12, 14, 15], 1200, 6000, 18000, 50000, 70000, 90000, false, 16000, 10000),
 			streetSpecial.new(false, 16, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000),
-			streetRow.new(0, 17, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000),
-			streetRow.new(0, 18, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000),
+			streetRow.new(false, 17, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000, 10000),
+			streetRow.new(false, 18, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000, 10000),
 			streetLuck.new(19),
-			streetRow.new(0, 20, 4, [17, 19, 20], 1600, 8000, 22000, 60000, 80000, 100000, false, 20000),
-			misc.new(21, "traficLight"),
-			streetRow.new(0, 22, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000),
-			streetRow.new(0, 23, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000),
+			streetRow.new(false, 20, 4, [17, 19, 20], 1600, 8000, 22000, 60000, 80000, 100000, false, 20000, 10000),
+			misc.new(21, "traficlight"),
+			streetRow.new(false, 22, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000, 15000),
+			streetRow.new(false, 23, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000, 15000),
 			streetLuck.new(24),
-			streetRow.new(0, 25, 5, [22, 24, 25], 2000, 10000, 30000, 75000, 92500, 110000, false, 24000),
+			streetRow.new(false, 25, 5, [22, 24, 25], 2000, 10000, 30000, 75000, 92500, 110000, false, 24000, 15000),
 			streetSpecial.new(false, 26, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000),
-			streetRow.new(0, 27, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000),
-			streetRow.new(0, 28, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000),
+			streetRow.new(false, 27, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000, 15000),
+			streetRow.new(false, 28, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000, 15000),
 			streetAirport.new(false, 29, [13, 29], 400, 1000, false, 15000),
-			streetRow.new(0, 30, 6, [27, 28, 30], 2400, 12000, 36000, 85000, 102000, 120000, false, 28000),
-			misc.new(31, "goJail"),
-			streetRow.new(0, 32, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000),
-			streetRow.new(0, 33, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000),
+			streetRow.new(false, 30, 6, [27, 28, 30], 2400, 12000, 36000, 85000, 102000, 120000, false, 28000, 15000),
+			streetLuck.new(31),
+			streetRow.new(false, 32, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000, 20000),
+			streetRow.new(false, 33, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000, 20000),
 			streetLuck.new(34),
-			streetRow.new(0, 35, 7, [32, 33, 35], 2800, 15000, 45000, 100000, 120000, 140000, false, 32000),
+			streetRow.new(false, 35, 7, [32, 33, 35], 2800, 15000, 45000, 100000, 120000, 140000, false, 32000, 20000),
 			streetSpecial.new(false, 36, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000),
 			streetLuck.new(37),
-			streetRow.new(0, 38, 8, [38, 40], 3500, 17500, 50000, 110000, 130000, 150000, false, 35000),
+			streetRow.new(false, 38, 8, [38, 40], 3500, 17500, 50000, 110000, 130000, 150000, false, 35000, 20000),
 			misc.new(39, "tax"),
-			streetRow.new(0, 40, 8, [38, 40], 5000, 20000, 60000, 140000, 170000, 200000, false, 40000),
+			streetRow.new(false, 40, 8, [38, 40], 5000, 20000, 60000, 140000, 170000, 200000, false, 40000, 20000),
+	]
+	cardList = [
+		cards.new("get", 30000, "Du får Damm-prisen for landets mest lovende Millionær-aspirant Motta kr. 30.000"),
+		cards.new("get", 15000, "Du selger aksjer og mottar kr. 15.000."),
+		cards.new("get", 10000, "Motta fra onkel i Amerika kr. 10.000."),
+		cards.new("get", 10000, "Du har 5 rette I Lotto og får utbetalt kr. 10.000."),
+		cards.new("get", 10000, "Etter tante Olga på Toten har du arvet 4 katter, en grønn papegøye, 16 juletrær på rot (uten pynt) og kr. 10.000 som utbetales av banken."),
+		cards.new("get", 10000, "Du har vunnet I Pengelotteriet. Motta kr. 10.000"),
+		cards.new("get", 10000, "Din premieobligasjon er blitt trukket ut. Motta kr. 10.000"),
+		cards.new("get", 5000, "Du har en 11'er og fire 10'ere I tipping og har utbetalt kr. 5.000."),
+		cards.new("get", 5000, "Du har kjøpt et maleri på loppemarked, og selger det videre med kr. 5.000 I fortjenste som utbetales av banken."),
+		cards.new("get", 5000, "I anledning av bankens 100 års jubileum, utbetales kr. 5.000 I ekstra bonus."),
+		cards.new("get", 2500, "Ligninen er lagt ut, og du får kr. 2.500 igjen på skatten."),
+		cards.new("get", 2000, "Du får julegratiale med kr. 2.000."),
+		cards.new("get", 500, "Du har vunnet kr. 500 på travbanen."),
+		
+		cards.new("pay", 7500, "Ligninen er lagt ut. Betal restskatt med kr. 7.500"),
+		cards.new("pay", 2000, "Betal eiendomskatt og avgifter med kr. 2.000."),
+		cards.new("pay", 1000, "Du er tatt I radarkontroll og må betale kr. 1.000 I bot for fartsoverskridelsen."),
 	]
 	
-func _process(delta):
+func _process(_delta):
 	if players and active:
 		camera.emit()
 	if selected == players and carlist.size() == selected and active:
 		active = false
 		cameraMain.emit()
-		for i in players:
-			playerPos.insert(i, 0)
 		car()
-		
+		addPlayers()
+
 func _on_button_button_up():
 	playerList.append(player.new())
 	playerList.append(player.new())
@@ -210,7 +248,6 @@ func _on_button_2_button_up():
 	playerList.append(player.new())
 	playerList.append(player.new())
 	players = 3
-	
 func _on_button_3_button_up():
 	playerList.append(player.new())
 	playerList.append(player.new())
@@ -218,16 +255,79 @@ func _on_button_3_button_up():
 	playerList.append(player.new())
 	players = 4
 
-func _on_button_4_button_up():
-	playerList.append(player.new())
-	playerList.append(player.new())
-	playerList.append(player.new())
-	playerList.append(player.new())
-	playerList.append(player.new())
-	players = 5
+func _bluecar():
+	if !selected == players:
+		if !carlist.has("bluecar"):
+			carlist.append("bluecar")
+			selected += 1
+			playerList[selected-1].car = bluecar
+func _yellowcar():
+	if !selected == players:
+		if !carlist.has("yellowcar"):
+			carlist.append("yellowcar")
+			selected += 1
+			playerList[selected-1].car = yellowcar
+func _lightgreencar():
+	if !selected == players:
+		if !carlist.has("lightgreencar"):
+			carlist.append("lightgreencar")
+			selected += 1
+			playerList[selected-1].car = lightgreencar
+func _darkgreencar():
+	if !selected == players:
+		if !carlist.has("darkgreencar"):
+			carlist.append("darkgreencar")
+			selected += 1
+			playerList[selected-1].car = darkgreencar
+func _orangecar():
+	if !selected == players:
+		if !carlist.has("orangecar"):
+			carlist.append("orangecar")
+			selected += 1
+			playerList[selected-1].car = orangecar
+func _pinkcar():
+	if !selected == players:
+		if !carlist.has("pinkcar"):
+			carlist.append("pinkcar")
+			selected += 1
+			playerList[selected-1].car = pinkcar
+func _redcar():
+	if !selected == players:
+		if !carlist.has("redcar"):
+			carlist.append("redcar")
+			selected += 1
+			playerList[selected-1].car = redcar
+func _blackcar():
+	if !selected == players:
+		if !carlist.has("blackcar"):
+			carlist.append("blackcar")
+			selected += 1
+			playerList[selected-1].car = blackcar
+
+
+func addPlayers():
+	playerlists = [player1,
+					player2,
+					player3,
+					player4]
+	
+	var playerData = [Vector2i(-11200, -7000), 
+					Vector2i(9500, -7000), 
+					Vector2i(-11200, 1000), 
+					Vector2i(9500, 1000),]
+	
+	for i in players:
+		print("added new")
+		playerlists[i] = Label.new()
+		add_child(playerlists[i])
+		playerlists[i].position = playerData[i]
+		playerlists[i].text = "Player %s \n%s \nMoney: %s" % [i+1, carlist[i], playerList[i].money]
+		playerlists[i].add_theme_font_size_override("font_size", 300)
+	
+
 
 func car():
-	var startpos =  Vector2(5699,4660)
+	var startpos =  Vector2(-1300,4660)
 	for i in carlist:
 		match i:
 			"bluecar":
@@ -280,180 +380,187 @@ func car():
 				blackcar.position = startpos
 		startpos -= Vector2(-80, 190)
 
-func moveCar(car, result):
+
+func moveCar():
 	current_position = playerList[currentPlayer-1].playerPos
+	playerList[currentPlayer-1].lastPos = current_position
 	current_position = (current_position + result) % 40
-	if current_position < 0:
+	if current_position == 0:
 		current_position += 40
-	print("current", current_position)
+	
 	var angle = (current_position+22) * (9)
 	var rad_angle = deg_to_rad(angle)
-	# Calculate new position
 	var x = center.x + radius * cos(rad_angle+4.5)
 	var y = center.y + radius * sin(rad_angle+4.5)
-	# Update the position of the node
-	car.position = Vector2(x, y)
 	
-	car.rotation_degrees = angle - angle*2
+	playerList[currentPlayer-1].car.position = Vector2(x, y)
+	playerList[currentPlayer-1].car.rotation_degrees = angle+17
 	playerList[currentPlayer-1].playerPos = current_position
+	if playerList[currentPlayer-1].lastPos > playerList[currentPlayer-1].playerPos:
+		playerList[currentPlayer-1].money += 20_000
+		updateScreen()
+	print("playerpos",playerList[currentPlayer-1].playerPos)
 	
-
-func _bluecar():
-	if !selected == players:
-		if !carlist.has("bluecar"):
-			carlist.append("bluecar")
-			selected += 1
-			playerList[selected-1].car = "bluecar"
-func _yellowcar():
-	if !selected == players:
-		if !carlist.has("yellowcar"):
-			carlist.append("yellowcar")
-			selected += 1
-			playerList[selected-1].car = "yellowcar"
-func _lightgreencar():
-	if !selected == players:
-		if !carlist.has("lightgreencar"):
-			carlist.append("lightgreencar")
-			selected += 1
-			playerList[selected-1].car = "lightgreencar"
-func _darkgreencar():
-	if !selected == players:
-		if !carlist.has("darkgreencar"):
-			carlist.append("darkgreencar")
-			selected += 1
-			playerList[selected-1].car = "darkgreencar"
-func _orangecar():
-	if !selected == players:
-		if !carlist.has("orangecar"):
-			carlist.append("orangecar")
-			selected += 1
-			playerList[selected-1].car = "orangecar"
-func _pinkcar():
-	if !selected == players:
-		if !carlist.has("pinkcar"):
-			carlist.append("pinkcar")
-			selected += 1
-			playerList[selected-1].car = "pinkcar"
-func _redcar():
-	if !selected == players:
-		if !carlist.has("redcar"):
-			carlist.append("redcar")
-			selected += 1
-			playerList[selected-1].car = "redcar"
-func _blackcar():
-	if !selected == players:
-		if !carlist.has("blackcar"):
-			carlist.append("blackcar")
-			selected += 1
-			playerList[selected-1].car = "blackcar"
 
 
 func _on_roll_dice_button_up():
-	if currentPlayer >= players:
-		currentPlayer = 0
 	var die1 = rng1.randi_range(1,6)
 	var die2 = rng2.randi_range(1,6)
-	var result = die1+die2
+	result = die1+die2
 	print("die", result)
-	match playerList[currentPlayer].car:
-		"bluecar":
-			moveCar(bluecar, result)
-			currentPlayer += 1
-			checkStreet()
-		"yellowcar":
-			moveCar(yellowcar, result)
-			currentPlayer += 1
-			checkStreet()
-		"lightgreencar":
-			moveCar(lightgreencar, result)
-			currentPlayer += 1
-			checkStreet()
-		"darkgreencar":
-			moveCar(darkgreencar, result)
-			currentPlayer += 1
-			checkStreet()
-		"orangecar":
-			moveCar(orangecar, result)
-			currentPlayer += 1
-			checkStreet()
-		"pinkcar":
-			moveCar(pinkcar, result)
-			currentPlayer += 1
-			checkStreet()
-		"redcar":
-			moveCar(redcar, result)
-			currentPlayer += 1
-			checkStreet()
-		"blackcar":
-			moveCar(blackcar, result)
-			currentPlayer += 1
-			checkStreet()
+	if playerList[currentPlayer-1].skipTurns == 0:
+		print("hello")
+		moveCar()
+	checkStreet()
+	updateScreen()
+	if playerList[currentPlayer-1].skipTurns != 0:
+		playerList[currentPlayer-1].skipTurns -= 1
+		if playerList[currentPlayer-1].inJail == true and playerList[currentPlayer-1].skipTurns == 0:
+			playerList[currentPlayer-1].inJail = false
+		print("skipturn",playerList[currentPlayer-1].skipTurns)
+	if playerList[currentPlayer-1].lastPos != 21:
+		playerList[currentPlayer-1].freePark = false
+	currentPlayer += 1
 	print("currentplayer",currentPlayer)
+	print("\n \n \n")
+	if currentPlayer > players:
+		currentPlayer = 0
 
-	
-
+				
 func checkStreet():
 	var current_street = street[current_position-1]
-	print("currentstreet", current_street.streetNumber)
 	var activePlayer = playerList[currentPlayer-1]
-	print(current_street.type)
 	match current_street.type:
+		
+		#TODO: give money to owner
 		"Street":
 			if current_street.owner != 0:
 				if currentPlayer != current_street.owner:
-					match current_street.houses:
-						0:
-							activePlayer.money = activePlayer.money - current_street.rent
-						1: 
-							activePlayer.money = activePlayer.money - current_street.house1
-						2: 
-							activePlayer.money = activePlayer.money - current_street.house2
-						3: 
-							activePlayer.money = activePlayer.money - current_street.house3
-						4: 
-							activePlayer.money = activePlayer.money - current_street.house4
-						5:
-							activePlayer.money = activePlayer.money - current_street.house5
+					if not activePlayer.freePark:
+						match current_street.houses:
+							0:
+								activePlayer.money = activePlayer.money - current_street.rent
+								playerList[current_street.owner-1].money += current_street.rent
+							1: 
+								activePlayer.money = activePlayer.money - current_street.house1
+								playerList[current_street.owner-1].money += current_street.house1
+							2: 
+								activePlayer.money = activePlayer.money - current_street.house2
+								playerList[current_street.owner-1].money += current_street.house2
+							3: 
+								activePlayer.money = activePlayer.money - current_street.house3
+								playerList[current_street.owner-1].money += current_street.house3
+							4: 
+								activePlayer.money = activePlayer.money - current_street.house4
+								playerList[current_street.owner-1].money += current_street.house4
+							5:
+								activePlayer.money = activePlayer.money - current_street.house5
+								playerList[current_street.owner-1].money += current_street.house5
 			else:
 				buyButton.visible = !buyButton.visible
 				rollDiceButton.visible = !rollDiceButton.visible
 				auctionButton.visible = !auctionButton.visible
 		"boat":
-			print("boat")
 			if current_street.owner != 0:
-				if currentPlayer != current_street.owner:
-					print("not owner")
-					for i in [6, 16, 26, 36]:
-						if street[i].owner == currentPlayer:
-							boatsOwned += 1
-					match boatsOwned:
-						1:
-							activePlayer.money = activePlayer.money - current_street.one
-						2:
-							activePlayer.money = activePlayer.money - current_street.two
-						3:
-							activePlayer.money = activePlayer.money - current_street.three
-						4:
-							activePlayer.money = activePlayer.money - current_street.four
+				if currentPlayer != current_street.owner-1:
+					if not activePlayer.freePark:
+						for i in [6, 16, 26, 36]:
+							if street[i].owner == currentPlayer:
+								boatsOwned += 1
+						match boatsOwned:
+							1:
+								activePlayer.money = activePlayer.money - current_street.one
+								playerList[current_street.owner-1].money += current_street.one
+							2:
+								activePlayer.money = activePlayer.money - current_street.two
+								playerList[current_street.owner-1].money += current_street.two
+							3:
+								activePlayer.money = activePlayer.money - current_street.three
+								playerList[current_street.owner-1].money += current_street.three
+							4:
+								activePlayer.money = activePlayer.money - current_street.four
+								playerList[current_street.owner-1].money += current_street.four
 			else:
 				buyButton.visible = !buyButton.visible
 				rollDiceButton.visible = !rollDiceButton.visible
 				auctionButton.visible = !auctionButton.visible
-				print("no owner")
-		
-			#TODO: add all buyable streets, luck and other streets
+		"airport":
+			if current_street.owner != 0:
+				if currentPlayer != current_street.owner-1:
+					if not activePlayer.freePark:
+						for i in [14, 29]:
+							if street[i].owner == currentPlayer:
+								airportsOwned += 1
+						match airportsOwned:
+							1:
+								activePlayer.money = current_street.one * 400
+								playerList[current_street.owner-1].money += current_street.one * 400
+							2:
+								activePlayer.money = current_street.two * 1000
+								playerList[current_street.owner-1].money += current_street.two * 1000
+					
+			else:
+				buyButton.visible = !buyButton.visible
+				rollDiceButton.visible = !rollDiceButton.visible
+				auctionButton.visible = !auctionButton.visible
+		"jail":
+			if not playerList[currentPlayer-1].inJail:
+				playerList[currentPlayer-1].inJail = true
+				playerList[currentPlayer-1].skipTurns = 3
+
+		"luck":
+			if cardList.size() > 0:
+				var card = rngCard.randi_range(1,cardList.size()-1)
+				usedCardList.append(cardList[card-1])
+				match cardList[card-1].type:
+					"pay":
+						activePlayer.money -= cardList[card-1].amount
+					"get":
+						activePlayer.money += cardList[card-1].amount
+				print(cardList[card-1].message)
+				cardList.remove_at(card-1)
+
+			else:
+				cardList = usedCardList
+				usedCardList = []
+		#TODO: add all buyable streets, luck and other streets
+		"tax":
+			activePlayer.money -= 10_000
+
+		"tax10":
+			activePlayer.money -= activePlayer.money*0.1
 			
-func _buy():
-	print(currentPlayer)
+		"traficlight":
+			activePlayer.freePark = true
+			
+			
+func updateScreen():
+	for i in players:
+		playerlists[i].text = "Player %s \n%s \nMoney: %s" % [i+1, carlist[i], playerList[i].money]
+		playerlists[i].add_theme_color_override("font_color", Color(1, 1, 1))
+	
+func buy():
 	var current_street = street[current_position-1]
 	if playerList[currentPlayer-1].money >= current_street.price:
 		playerList[currentPlayer-1].money -= current_street.price
 		current_street.owner = currentPlayer
-		rollDiceButton.visible = !rollDiceButton.visible
+		print(current_street.owner)
+		doneButton.visible = !doneButton.visible
 		buyButton.visible = !buyButton.visible
 		auctionButton.visible = !auctionButton.visible
-		print(current_street.owner)
 	else:
 		auction()
+	updateScreen()
 func auction():
-	pass
+	doneButton.visible = !doneButton.visible
+	buyButton.visible = !buyButton.visible
+	auctionButton.visible = !auctionButton.visible
+
+	#TODO: add auction
+
+func done():
+	doneButton.visible = !doneButton.visible
+	rollDiceButton.visible = !rollDiceButton.visible
+	
+	#TODO: add houses, pledge
+	#pledge is not important

@@ -7,18 +7,28 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	pass
+#-42498
+#-13478
+#0.1
 
+#-23936
+#-13675
+#0.14
 
-func _on_button_button_up():
-	position = Vector2(-8717, 1459.656)
-	set_zoom(Vector2(0.2, 0.2))
+#-24085
+#-13675
+#0.22
 
 func _on_node_2d_camera():
-	position = Vector2(-16736, 1459.656)
-	set_zoom(Vector2(0.2, 0.2))
+	position = Vector2(-24095.5, 1500)
+	set_zoom(Vector2(0.22, 0.22))
 
 func _on_node_2d_camera_main():
-	position = Vector2(7000, 0)
-	set_zoom(Vector2(0.09, 0.09))
+	position = Vector2(0, 0)
+	set_zoom(Vector2(0.08, 0.08))
+
+func _on_play_button_up():
+	position = Vector2(-23936, -13675)
+	set_zoom(Vector2(0.14, 0.14))
