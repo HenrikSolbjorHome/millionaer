@@ -13,7 +13,7 @@ var usedCardList = []
 var selected = 0
 var carlist = []
 var active = true
-var currentPlayer = 0
+var currentPlayer = 1
 var pressed: int
 var street = []
 var boatsOwned: int
@@ -413,6 +413,9 @@ func _on_roll_dice_button_up():
 		moveCar()
 	checkStreet()
 	updateScreen()
+	for i in players:
+		playerlists[i].add_theme_color_override("font_color", Color(1, 1, 1))
+	playerlists[currentPlayer-1].add_theme_color_override("font_color", Color(0, 1, 0))
 	if playerList[currentPlayer-1].skipTurns != 0:
 		playerList[currentPlayer-1].skipTurns -= 1
 		if playerList[currentPlayer-1].inJail == true and playerList[currentPlayer-1].skipTurns == 0:
@@ -424,7 +427,7 @@ func _on_roll_dice_button_up():
 	print("currentplayer",currentPlayer)
 	print("\n \n \n")
 	if currentPlayer > players:
-		currentPlayer = 0
+		currentPlayer = 1
 
 				
 func checkStreet():
@@ -537,7 +540,6 @@ func checkStreet():
 func updateScreen():
 	for i in players:
 		playerlists[i].text = "Player %s \n%s \nMoney: %s" % [i+1, carlist[i], playerList[i].money]
-		playerlists[i].add_theme_color_override("font_color", Color(1, 1, 1))
 	
 func buy():
 	var current_street = street[current_position-1]
@@ -561,6 +563,8 @@ func auction():
 func done():
 	doneButton.visible = !doneButton.visible
 	rollDiceButton.visible = !rollDiceButton.visible
-	
+	for i in players:
+		playerlists[i].add_theme_color_override("font_color", Color(1, 1, 1))
+	playerlists[currentPlayer-1].add_theme_color_override("font_color", Color(0, 1, 0))
 	#TODO: add houses, pledge
 	#pledge is not important
