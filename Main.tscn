@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cdvmhv5vcbea1"]
+[gd_scene load_steps=21 format=3 uid="uid://cdvmhv5vcbea1"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_c1hkb"]
 [ext_resource type="Texture2D" uid="uid://cx1c3nnlkcfnf" path="res://Kristiansund.png" id="2_3mq77"]
@@ -26,6 +26,9 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 [sub_resource type="Theme" id="Theme_fji62"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_spn15"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_02ooa"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [node name="Node2D" type="Node2D"]
@@ -253,11 +256,11 @@ offset_bottom = -32553.0
 scale = Vector2(0.471708, 0.862694)
 
 [node name="Window_Mode_Button" parent="." instance=ExtResource("15_gt8wg")]
-offset_left = -114041.0
-offset_top = 2542.0
-offset_right = -111606.0
-offset_bottom = 3882.0
-scale = Vector2(3.42831, 2.57595)
+offset_left = -192406.0
+offset_top = -16004.0
+offset_right = -187406.0
+offset_bottom = -15204.0
+scale = Vector2(4.39008, 4.22075)
 
 [node name="Main_menu" type="Node2D" parent="."]
 position = Vector2(-115074, -44255)
@@ -303,7 +306,7 @@ metadata/_edit_use_anchors_ = true
 [node name="Sprite2D2" type="Sprite2D" parent="Main_menu"]
 light_mask = 2
 z_index = -1
-position = Vector2(8, -22.0015)
+position = Vector2(27, -136)
 scale = Vector2(2.6166, 2.89188)
 texture = ExtResource("14_edth0")
 
@@ -311,6 +314,22 @@ texture = ExtResource("14_edth0")
 position = Vector2(2888, 812.5)
 scale = Vector2(1.007, 1)
 texture = ExtResource("2_3mq77")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(-177024, -11136)
+scale = Vector2(10, 10)
+texture = ExtResource("14_edth0")
+
+[node name="Back from settings" type="Button" parent="."]
+offset_left = -163253.0
+offset_top = -19218.0
+offset_right = -162091.0
+offset_bottom = -18300.0
+scale = Vector2(1.543, 1)
+theme_override_font_sizes/font_size = 500
+theme_override_styles/normal = SubResource("StyleBoxFlat_02ooa")
+text = "Back"
 
 [connection signal="camera" from="." to="Camera2D" method="_on_node_2d_camera"]
 [connection signal="cameraMain" from="." to="Camera2D" method="_on_node_2d_camera_main"]
@@ -330,5 +349,6 @@ texture = ExtResource("2_3mq77")
 [connection signal="button_up" from="CarSelect/redcar" to="." method="_redcar"]
 [connection signal="button_up" from="CarSelect/blackcar" to="." method="_blackcar"]
 [connection signal="button_up" from="Main_menu/Exit" to="Main_menu" method="_on_exit_button_up"]
-[connection signal="button_up" from="Main_menu/Settings" to="Main_menu" method="_on_settings_button_up"]
+[connection signal="button_up" from="Main_menu/Settings" to="Camera2D" method="_on_settings_button_up"]
 [connection signal="button_up" from="Main_menu/Play" to="Camera2D" method="_on_play_button_up"]
+[connection signal="button_up" from="Back from settings" to="Camera2D" method="_on_button_button_up"]

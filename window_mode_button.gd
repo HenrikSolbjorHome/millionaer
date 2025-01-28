@@ -5,8 +5,8 @@ extends Control
 
 
 const WINDOW_MODE_ARRAY : Array[String] = [
-	"Full-screen",
 	"Window Mode",
+	"Full-screen",
 	"Borderless Window",
 	"Borderless Full-Screen",
 ]
@@ -24,11 +24,11 @@ func add_window_mode_items() -> void:
 	
 func on_window_mode_selected(index : int) -> void:
 	match index:
-		0: # = Full-screen
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
-		1: # = Window Mode
+		0: # = Window Mode 
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
+		1: # = Full-screen
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
 		2: # = Borderless Window
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)

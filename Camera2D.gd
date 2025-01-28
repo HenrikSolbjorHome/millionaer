@@ -32,3 +32,13 @@ func _on_node_2d_camera_main():
 func _on_play_button_up(): #play
 	position = Vector2(10034.001, -42777)
 	set_zoom(Vector2(0.14, 0.14))
+
+
+func _on_settings_button_up(): # settings
+	position = Vector2(-177024, -11136)
+	set_zoom(Vector2(0.06, 0.06)) 
+	
+
+func _on_button_button_up():
+	position = Vector2(-115000.992, -44180)
+	set_zoom(Vector2(0.1, 0.1))

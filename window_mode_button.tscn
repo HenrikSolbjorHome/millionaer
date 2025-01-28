@@ -11,7 +11,7 @@ offset_bottom = 168.0
 script = ExtResource("2_sdtq4")
 
 [node name="Label" parent="HBoxContainer" index="0"]
-theme_override_font_sizes/font_size = 500
+theme_override_font_sizes/font_size = 100
 text = "Window Mode:"
 
 [node name="OptionButton" parent="HBoxContainer" index="2"]

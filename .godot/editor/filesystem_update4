@@ -4,3 +4,4 @@ res://window_mode_button.tscn
 res://resolution_mode_button.tscn
 res://startmeny.gd
 res://Camera2D.gd
+res://window_mode_button.gd
