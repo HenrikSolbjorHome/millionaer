@@ -40,5 +40,5 @@ func _on_settings_button_up(): # settings
 	
 
 func _on_button_button_up():
-	position = Vector2(-115000.992, -44180)
+	position = Vector2(-115071, -44150)
 	set_zoom(Vector2(0.1, 0.1))

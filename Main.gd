@@ -14,6 +14,7 @@ var playerlist = []
 var playerListCard = [] 
 var cardList = []
 var usedCardList = []
+var propertyCards = []
 var selected = 0
 var carlist = []
 var active = true
@@ -28,6 +29,7 @@ var result: int
 var currentBid: int = 0
 var currPlayer: int = 1
 var passedPlayers: int = 0
+var box
 
 signal camera
 signal cameraMain
@@ -228,6 +230,9 @@ func _ready():
 			streetRow.new(false, 40, 8, [38, 40], 5000, 20000, 60000, 140000, 170000, 200000, false, 40000, 20000, "res://Kort/GateKort/Kongens Gate-Kort.png"),
 	]
 
+	propertyCards = [
+		2, 4, 6, 7, 8, 10, 12, 13, 14, 15, 16, 17, 18, 20, 22, 23, 25, 26, 27, 28, 29, 30, 32, 33, 35, 36, 38, 40
+	]
 	
 	cardList = [
 		cards.new("get", 30000, "Du får Damm-prisen for landets mest lovende Millionær-aspirant Motta kr. 30.000"),
@@ -347,10 +352,26 @@ func addPlayers():
 		playerlist[i].text = "Player %s \n%s \nMoney: %s" % [i+1, carlist[i], playerList[i].money]
 		playerlist[i].add_theme_font_size_override("font_size", 300)
 		
-		playerListCard[i] = HBoxContainer.new()
-		add_child(playerListCard[i])
-		playerlist[i].position = playerData[i - Vector2i(0, 1000)]
 		
+		var vbox = VBoxContainer.new()
+		vbox.name = "VBox"
+		vbox.position = playerData[i]
+		vbox.size_flags_horizontal = 900
+		vbox.size_flags_vertical = 900
+		vbox.anchor_left = 0.1
+		vbox.anchor_right = 0.9
+		vbox.anchor_top = 0.1
+		vbox.anchor_bottom = 0.9
+		
+		add_child(vbox)
+		
+		box = BoxContainer.new()
+		add_child(playerListCard[i])
+		playerlist[i].position = playerData[i] - Vector2i(0, 1000)
+		box.size_flags_horizontal = BoxContainer.SIZE_EXPAND_FILL
+		box.size_flags_vertical = BoxContainer.SIZE_EXPAND_FILL
+		box.custom_minimum_size = Vector2(150, 150)  # Set box size
+		vbox.add_child(box)
 
 func car():
 	var startpos =  Vector2(-1300,4660)
@@ -575,8 +596,11 @@ func updateScreen():
 	for i in players:
 		playerlist[i].text = "Player %s \n%s \nMoney: %s" % [i+1, carlist[i], playerList[i].money]
 		
-	for i in street:
-		playerListCard[i].add_child(Sprite2D.new())
+	for i in players:
+		var sprite = Sprite2D.new()
+		sprite.texture = street[propertyCards[i]]
+		box.add_child(sprite)
+		
 	
 func buy():
 	if currentPlayer > players-1:
@@ -624,7 +648,7 @@ func pass_button():
 	if passedPlayers == players and currentBid == 0:
 		rollDiceButton.visible = !rollDiceButton.visible
 		bid.visible = !bid.visible
-	elif passedPlayers == players and currentBid != 0:
+	elif passedPlayers == players and currentBid != 0 and playerList[currPlayer-1].money > 0:
 		playerList[currPlayer-1].money -= currentBid
 		street[currPlayer-1].owner = currPlayer-1
 		updateScreen()
