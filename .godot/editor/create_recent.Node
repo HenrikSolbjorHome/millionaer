@@ -1,13 +1,15 @@
+Node2D
+ScrollContainer
 VBoxContainer
+Control
+Window
 Sprite2D
 OptionButton
 VSeparator
 Label
 HBoxContainer
 SubViewport
-Window
 Button
-Node2D
 CanvasModulate
 Camera2D
 Node

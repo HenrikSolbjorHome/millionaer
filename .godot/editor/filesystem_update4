@@ -1,6 +1,6 @@
 res://Main.tscn
-res://startmeny.gd
-res://window_mode_button.gd
 res://options_display_button.tscn
 res://window_mode_button.tscn
 res://resolution_mode_button.tscn
+res://startmeny.gd
+res://Camera2D.gd

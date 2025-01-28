@@ -21,14 +21,14 @@ func _process(_delta):
 #-13675
 #0.22
 
-func _on_node_2d_camera():
-	position = Vector2(-24095.5, 1500)
+func _on_node_2d_camera():   # bil
+	position = Vector2(-42267, -12983.656)
 	set_zoom(Vector2(0.22, 0.22))
 
 func _on_node_2d_camera_main():
 	position = Vector2(0, 0)
 	set_zoom(Vector2(0.08, 0.08))
 
-func _on_play_button_up():
-	position = Vector2(-23936, -13675)
+func _on_play_button_up(): #play
+	position = Vector2(10034.001, -42777)
 	set_zoom(Vector2(0.14, 0.14))
