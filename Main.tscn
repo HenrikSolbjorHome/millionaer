@@ -295,16 +295,16 @@ scale = Vector2(2.12951, 2.11583)
 texture = ExtResource("2_3mq77")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-offset_left = -63008.0
-offset_top = -28672.0
-offset_right = -34808.0
-offset_bottom = -11608.0
+offset_left = -21271.0
+offset_top = -39505.0
+offset_right = 6929.0
+offset_bottom = -22441.0
 
 [node name="Window_Mode_Button" parent="." instance=ExtResource("15_gt8wg")]
-offset_left = -43092.0
-offset_top = -16618.0
-offset_right = -30043.0
-offset_bottom = -10691.0
+offset_left = -39092.0
+offset_top = -18381.0
+offset_right = -26043.0
+offset_bottom = -12454.0
 
 [connection signal="camera" from="." to="Camera2D" method="_on_node_2d_camera"]
 [connection signal="cameraMain" from="." to="Camera2D" method="_on_node_2d_camera_main"]
