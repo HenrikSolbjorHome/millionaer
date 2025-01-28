@@ -1,28 +1,30 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1737907695
-blåbil.png::CompressedTexture2D::5579364637064190062::1737556500::1737556560::1::::<><>::
-Camera2D.gd::GDScript::-1::1737833218::0::1::::<>Camera2D<>::
-grønnbil.png::CompressedTexture2D::3489480249290645247::1737556560::1737556560::1::::<><>::
-grønnerebil.png::CompressedTexture2D::4837578308846979649::1737556560::1737556560::1::::<><>::
-gulbil.png::CompressedTexture2D::4890245229285841834::1737556560::1737556560::1::::<><>::
-icon.svg::CompressedTexture2D::785590977713948838::1737556560::1737556560::1::::<><>::
-Kristiansund.png::CompressedTexture2D::6441030732280618275::1737556620::1737556620::1::::<><>::
-Main.gd::GDScript::-1::1737844694::0::1::::<>Node2D<>::
-Main.tscn::PackedScene::5027502085897432434::1737903670::0::1::::<><>::res://Main.gd<>uid://cx1c3nnlkcfnf::::res://Kristiansund.png<>uid://lgstllkj4ugs::::res://icon.svg<>uid://c3fx2pmbvgo1j::::res://Svart-Bil – Kopi/Lyseblå-Bil.png<>res://Camera2D.gd<>uid://s22ndrkix2tb::::res://Svart-Bil – Kopi/Gul-Bil.png<>uid://dxreecjfj4i4::::res://Svart-Bil – Kopi/Lysegrønn-Bil.png<>uid://b6nxtbvgiggqx::::res://Svart-Bil – Kopi/Mørkegrønn-Bil.png<>uid://bj1eq5l1wfsps::::res://Svart-Bil – Kopi/Oransje-Bil.png<>uid://dks4vqkpioq4d::::res://Svart-Bil – Kopi/Rosa-Bil.png<>uid://bi7sexhpfmur7::::res://Svart-Bil – Kopi/Rød-Bil.png<>uid://bb2olhua50yvm::::res://Svart-Bil – Kopi/Svart-Bil.png
-oransjebil.png::CompressedTexture2D::8149656938757335254::1737556620::1737556620::1::::<><>::
-rosabil.png::CompressedTexture2D::5110572254192204158::1737556620::1737556620::1::::<><>::
-rødbil.png::CompressedTexture2D::6235544017117422466::1737556620::1737556620::1::::<><>::
-svartbil.png::CompressedTexture2D::4484420611569251497::1737556620::1737556620::1::::<><>::
-::res://addons/::1737653575
-::res://addons/pISSStreamGodot/::1737580139
-plugin.cfg::TextFile::-1::1737580139::0::1::::<><>::
-plugin.gd::GDScript::-1::1737580139::0::1::::<>EditorPlugin<>::
-::res://Svart-Bil – Kopi/::1737560335
-Gul-Bil.png::CompressedTexture2D::1320800143267361323::1737556560::1737556560::1::::<><>::
-Lyseblå-Bil.png::CompressedTexture2D::6749896391752125141::1737556560::1737556560::1::::<><>::
-Lysegrønn-Bil.png::CompressedTexture2D::259086764909118937::1737556560::1737556560::1::::<><>::
-Mørkegrønn-Bil.png::CompressedTexture2D::4590542253440493183::1737556560::1737556560::1::::<><>::
-Oransje-Bil.png::CompressedTexture2D::3072067132618782048::1737556560::1737556560::1::::<><>::
-Rosa-Bil.png::CompressedTexture2D::7900108438009371501::1737556560::1737556560::1::::<><>::
-Rød-Bil.png::CompressedTexture2D::3015092789512081538::1737556560::1737556560::1::::<><>::
-Svart-Bil.png::CompressedTexture2D::2513217806923072222::1737556560::1737556560::1::::<><>::
+::res://::1738051741
+blåbil.png::CompressedTexture2D::5579364637064190062::1738051001::1738051001::1::::<><>::
+Camera2D.gd::GDScript::-1::1738051001::0::1::::<>Camera2D<>::
+grønnbil.png::CompressedTexture2D::3489480249290645247::1738051001::1738051001::1::::<><>::
+grønnerebil.png::CompressedTexture2D::4837578308846979649::1738051001::1738051001::1::::<><>::
+gulbil.png::CompressedTexture2D::4890245229285841834::1738051001::1738051001::1::::<><>::
+icon.svg::CompressedTexture2D::785590977713948838::1738051001::1738051001::1::::<><>::
+Kristiansund.png::CompressedTexture2D::6441030732280618275::1738051001::1738051001::1::::<><>::
+Main.gd::GDScript::-1::1738051001::0::1::::<>Node2D<>::
+Main.tscn::PackedScene::5027502085897432434::1738051741::0::1::::<><>::res://Main.gd<>uid://cx1c3nnlkcfnf::::res://Kristiansund.png<>uid://lgstllkj4ugs::::res://icon.svg<>uid://c3fx2pmbvgo1j::::res://Svart-Bil – Kopi/Lyseblå-Bil.png<>res://Camera2D.gd<>uid://s22ndrkix2tb::::res://Svart-Bil – Kopi/Gul-Bil.png<>uid://dxreecjfj4i4::::res://Svart-Bil – Kopi/Lysegrønn-Bil.png<>uid://b6nxtbvgiggqx::::res://Svart-Bil – Kopi/Mørkegrønn-Bil.png<>uid://bj1eq5l1wfsps::::res://Svart-Bil – Kopi/Oransje-Bil.png<>uid://dks4vqkpioq4d::::res://Svart-Bil – Kopi/Rosa-Bil.png<>uid://bi7sexhpfmur7::::res://Svart-Bil – Kopi/Rød-Bil.png<>uid://bb2olhua50yvm::::res://Svart-Bil – Kopi/Svart-Bil.png
+oransjebil.png::CompressedTexture2D::8149656938757335254::1738051001::1738051001::1::::<><>::
+README.md::TextFile::-1::1738051001::0::1::::<><>::
+rosabil.png::CompressedTexture2D::5110572254192204158::1738051001::1738051001::1::::<><>::
+rødbil.png::CompressedTexture2D::6235544017117422466::1738051001::1738051001::1::::<><>::
+svartbil.png::CompressedTexture2D::4484420611569251497::1738051001::1738051001::1::::<><>::
+::res://addons/::1738051001
+::res://addons/pISSStreamGodot/::1738052060
+CUQDXD8Sc0C-QLY65O89b.jpg::CompressedTexture2D::1877212630464819758::1738052060::1738052062::1::::<><>::
+plugin.cfg::TextFile::-1::1738051001::0::1::::<><>::
+plugin.gd::GDScript::-1::1738051001::0::1::::<>EditorPlugin<>::
+::res://Svart-Bil – Kopi/::1738051001
+Gul-Bil.png::CompressedTexture2D::1320800143267361323::1738051001::1738051001::1::::<><>::
+Lyseblå-Bil.png::CompressedTexture2D::6749896391752125141::1738051001::1738051001::1::::<><>::
+Lysegrønn-Bil.png::CompressedTexture2D::259086764909118937::1738051001::1738051001::1::::<><>::
+Mørkegrønn-Bil.png::CompressedTexture2D::4590542253440493183::1738051001::1738051001::1::::<><>::
+Oransje-Bil.png::CompressedTexture2D::3072067132618782048::1738051001::1738051001::1::::<><>::
+Rosa-Bil.png::CompressedTexture2D::7900108438009371501::1738051001::1738051001::1::::<><>::
+Rød-Bil.png::CompressedTexture2D::3015092789512081538::1738051001::1738051001::1::::<><>::
+Svart-Bil.png::CompressedTexture2D::2513217806923072222::1738051001::1738051001::1::::<><>::

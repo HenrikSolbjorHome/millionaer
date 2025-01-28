@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cdvmhv5vcbea1"]
+[gd_scene load_steps=20 format=3 uid="uid://cdvmhv5vcbea1"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_c1hkb"]
 [ext_resource type="Texture2D" uid="uid://cx1c3nnlkcfnf" path="res://Kristiansund.png" id="2_3mq77"]
@@ -12,9 +12,25 @@
 [ext_resource type="Texture2D" uid="uid://dks4vqkpioq4d" path="res://Svart-Bil – Kopi/Rosa-Bil.png" id="10_o3lu6"]
 [ext_resource type="Texture2D" uid="uid://bi7sexhpfmur7" path="res://Svart-Bil – Kopi/Rød-Bil.png" id="11_fhs6k"]
 [ext_resource type="Texture2D" uid="uid://bb2olhua50yvm" path="res://Svart-Bil – Kopi/Svart-Bil.png" id="12_iw38e"]
+[ext_resource type="Script" path="res://startmeny.gd" id="13_o2bhh"]
+[ext_resource type="Texture2D" uid="uid://10log6vev2du" path="res://addons/pISSStreamGodot/CUQDXD8Sc0C-QLY65O89b.jpg" id="14_8nwtl"]
+[ext_resource type="PackedScene" uid="uid://wcdt61yesfya" path="res://window_mode_button.tscn" id="15_gt8wg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_evwfg"]
+bg_color = Color(0.584314, 0.556863, 0.533333, 0)
+border_color = Color(0, 0.941176, 0.658824, 0)
+
+[sub_resource type="Theme" id="Theme_vlpfl"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w36dn"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3ren8"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_c1hkb")
+metadata/_edit_horizontal_guides_ = []
 
 [node name="Camera2D" type="Camera2D" parent="."]
 z_index = 1
@@ -229,21 +245,66 @@ texture = ExtResource("12_iw38e")
 [node name="MainMenu" type="Node2D" parent="."]
 position = Vector2(-42498, -13478)
 scale = Vector2(2, 2)
+script = ExtResource("13_o2bhh")
 
-[node name="Main menu" type="Sprite2D" parent="MainMenu"]
-position = Vector2(24, 0)
-scale = Vector2(74, 62.515)
-texture = ExtResource("3_heh7a")
+[node name="Exit" type="Button" parent="MainMenu"]
+offset_left = -4996.5
+offset_top = 883.0
+offset_right = -2578.5
+offset_bottom = 2253.0
+theme_override_font_sizes/font_size = 1000
+theme_override_styles/normal = SubResource("StyleBoxFlat_evwfg")
+text = "Exit
+"
 
 [node name="Play" type="Button" parent="MainMenu"]
-offset_left = -1276.71
-offset_top = -1549.18
-offset_right = 1141.29
-offset_bottom = -179.183
+offset_left = -4670.0
+offset_top = -2754.0
+offset_right = -2252.0
+offset_bottom = -1384.0
 scale = Vector2(1.00089, 1)
+theme = SubResource("Theme_vlpfl")
 theme_override_font_sizes/font_size = 1000
+theme_override_styles/normal = SubResource("StyleBoxFlat_w36dn")
 text = "PLAY"
 metadata/_edit_use_anchors_ = true
+
+[node name="Button" type="Button" parent="MainMenu/Play"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.399
+anchor_bottom = 0.5
+offset_left = -10.9902
+offset_top = 1850.5
+offset_right = 2893.23
+offset_bottom = 2612.5
+theme_override_font_sizes/font_size = 1000
+theme_override_styles/normal = SubResource("StyleBoxFlat_3ren8")
+text = "Settings"
+
+[node name="Sprite2D2" type="Sprite2D" parent="MainMenu"]
+light_mask = 2
+z_index = -1
+position = Vector2(8, -22.0015)
+scale = Vector2(2.6166, 2.89188)
+texture = ExtResource("14_8nwtl")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(-36693, -11957.8)
+scale = Vector2(2.12951, 2.11583)
+texture = ExtResource("2_3mq77")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = -63008.0
+offset_top = -28672.0
+offset_right = -34808.0
+offset_bottom = -11608.0
+
+[node name="Window_Mode_Button" parent="." instance=ExtResource("15_gt8wg")]
+offset_left = -43092.0
+offset_top = -16618.0
+offset_right = -30043.0
+offset_bottom = -10691.0
 
 [connection signal="camera" from="." to="Camera2D" method="_on_node_2d_camera"]
 [connection signal="cameraMain" from="." to="Camera2D" method="_on_node_2d_camera_main"]
@@ -262,4 +323,6 @@ metadata/_edit_use_anchors_ = true
 [connection signal="button_up" from="CarSelect/pinkcar" to="." method="_pinkcar"]
 [connection signal="button_up" from="CarSelect/redcar" to="." method="_redcar"]
 [connection signal="button_up" from="CarSelect/blackcar" to="." method="_blackcar"]
+[connection signal="button_up" from="MainMenu/Exit" to="MainMenu" method="_on_exit_button_up"]
 [connection signal="button_up" from="MainMenu/Play" to="Camera2D" method="_on_play_button_up"]
+[connection signal="button_up" from="MainMenu/Play/Button" to="MainMenu" method="_on_button_button_up_settings"]
