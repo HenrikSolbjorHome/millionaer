@@ -4,23 +4,30 @@ extends Node2D
 @onready var rollDiceButton = $rollDice
 @onready var auctionButton = $Auction
 @onready var doneButton = $Done
+@onready var bidInput = $bid/bidinput
+@onready var bid = $bid
+@onready var passButton = $bid/passButton
 
 var players
 var playerList = []
-var playerlists = []
+var playerlist = []
+var playerListCard = [] 
 var cardList = []
 var usedCardList = []
 var selected = 0
 var carlist = []
 var active = true
-var currentPlayer = 1
+var currentPlayer = 0
 var pressed: int
 var street = []
+var streetCards
 var boatsOwned: int
 var airportsOwned: int
+var streetsOwned: int
 var result: int
-
-
+var currentBid: int = 0
+var currPlayer: int = 1
+var passedPlayers: int = 0
 
 signal camera
 signal cameraMain
@@ -30,6 +37,12 @@ var player2
 var player3
 var player4
 var player5
+
+var player1Card
+var player2Card
+var player3Card
+var player4Card
+var player5Card
 
 var bluecar = Sprite2D.new()
 var yellowcar = Sprite2D.new()
@@ -67,6 +80,7 @@ class player:
 class streets:
 	var streetNumber: int
 	var owner: int
+	var card
 	
 	func getStreetNumber():
 		return streetNumber
@@ -87,7 +101,7 @@ class streetRow extends streets:
 	var pledged: bool
 	var type = "Street"
 	var housePrice: int
-	func _init(_owner, _streetNumber, _row, _rowNumbers, _rent, _house1, _house2, _house3, _house4, _house5, _pledged, _price, _housePrice):
+	func _init(_owner, _streetNumber, _row, _rowNumbers, _rent, _house1, _house2, _house3, _house4, _house5, _pledged, _price, _housePrice, _card):
 		owner = _owner
 		streetNumber = _streetNumber
 		row = row
@@ -101,6 +115,7 @@ class streetRow extends streets:
 		pledged = _pledged
 		price = _price
 		housePrice = _housePrice
+		card = _card
 		
 class streetSpecial extends streets:
 	var rowNumbers = []
@@ -112,7 +127,7 @@ class streetSpecial extends streets:
 	var pledged: bool
 	var type = "boat"
 	
-	func _init(_owner, _streetNumber, _rowNumbers, _one, _two, _three, _four, _pledged, _price):
+	func _init(_owner, _streetNumber, _rowNumbers, _one, _two, _three, _four, _pledged, _price, _card):
 		owner = _owner
 		streetNumber = _streetNumber
 		rowNumbers = _rowNumbers
@@ -122,6 +137,7 @@ class streetSpecial extends streets:
 		four = _four
 		pledged = _pledged
 		price = _price
+		card = _card
 	
 
 	
@@ -133,7 +149,7 @@ class streetAirport extends streets:
 	var pledged: bool
 	var type = "airport"
 	
-	func _init(_owner, _streetNumber, _rowNumbers, _one, _two, _pledged, _price):
+	func _init(_owner, _streetNumber, _rowNumbers, _one, _two, _pledged, _price, _card):
 		owner = _owner
 		streetNumber = _streetNumber
 		rowNumbers = _rowNumbers
@@ -141,6 +157,7 @@ class streetAirport extends streets:
 		two = _two
 		pledged = _pledged
 		price = _price
+		card = _card
 	
 
 
@@ -170,46 +187,48 @@ func _ready():
 	#				owner, street number, row, rownumbers, rent, house1, house2, house3, house4, house5, pledged
 	street = [
 			misc.new(1, "start"),
-			streetRow.new(false, 2, 1, [2,3], 200, 1000, 3000, 9000, 16000, 25000, false, 6000, 5000),
+			streetRow.new(false, 2, 1, [2,3], 200, 1000, 3000, 9000, 16000, 25000, false, 6000, 5000, "res://Kort/GateKort/Omsundet-Kort.png"),
 			streetLuck.new(3),
-			streetRow.new(false, 4, 1, [2,3], 400, 2000, 6000, 18000, 32000, 45000, false, 6000, 5000),
+			streetRow.new(false, 4, 1, [2,3], 400, 2000, 6000, 18000, 32000, 45000, false, 6000, 5000, "res://Kort/GateKort/Rensvik-Kort.png"),
 			misc.new(5, "tax10"),
-			streetSpecial.new(false, 6, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000),
-			streetRow.new(false, 7, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000, 5000),
-			streetRow.new(false, 8, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000, 5000),
+			streetSpecial.new(false, 6, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Sundbåten-Kort.png"),
+			streetRow.new(false, 7, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000, 5000, "res://Kort/GateKort/Gomalandet-Kort.png"),
+			streetRow.new(false, 8, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000, 5000, "res://Kort/GateKort/Byskogen-Kort.png"),
 			streetLuck.new(9),
-			streetRow.new(false, 10, 2, [7,9,10],800, 4000, 10000, 30000, 45000, 60000, false, 12000, 5000),
+			streetRow.new(false, 10, 2, [7,9,10],800, 4000, 10000, 30000, 45000, 60000, false, 12000, 5000, "res://Kort/GateKort/Dale-Kort.png"),
 			misc.new(11, "jail"),
-			streetRow.new(false, 12, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000, 10000),
-			streetRow.new(false, 13, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000, 10000),
-			streetAirport.new(false, 14, [13, 29], 400, 1000, false, 15000),
-			streetRow.new(false, 15, 3, [12, 14, 15], 1200, 6000, 18000, 50000, 70000, 90000, false, 16000, 10000),
-			streetSpecial.new(false, 16, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000),
-			streetRow.new(false, 17, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000, 10000),
-			streetRow.new(false, 18, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000, 10000),
+			streetRow.new(false, 12, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000, 10000, "res://Kort/GateKort/Storskarven-Kort.png"),
+			streetRow.new(false, 13, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000, 10000, "res://Kort/GateKort/Innlandet-Kort.png"),
+			streetAirport.new(false, 14, [13, 29], 400, 1000, false, 15000, "res://Kort/GateKort/Flyplass1-Kort.png"),
+			streetRow.new(false, 15, 3, [12, 14, 15], 1200, 6000, 18000, 50000, 70000, 90000, false, 16000, 10000, "res://Kort/GateKort/Nordlandet-Kort.png"),
+			streetSpecial.new(false, 16, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Kulturfabrikken-Kort.png"),
+			streetRow.new(false, 17, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000, 10000, "res://Kort/GateKort/Atlanten-Kort.png"),
+			streetRow.new(false, 18, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000, 10000, "res://Kort/GateKort/St.Hanshaugen-Kort.png"),
 			streetLuck.new(19),
-			streetRow.new(false, 20, 4, [17, 19, 20], 1600, 8000, 22000, 60000, 80000, 100000, false, 20000, 10000),
+			streetRow.new(false, 20, 4, [17, 19, 20], 1600, 8000, 22000, 60000, 80000, 100000, false, 20000, 10000, "res://Kort/GateKort/Campus-Kort.png"),
 			misc.new(21, "traficlight"),
-			streetRow.new(false, 22, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000, 15000),
-			streetRow.new(false, 23, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000, 15000),
+			streetRow.new(false, 22, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000, 15000, "res://Kort/GateKort/Ivar Aasens Gate-Kort.png"),
+			streetRow.new(false, 23, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000, 15000, "res://Kort/GateKort/Kaibakken-Kort.png"),
 			streetLuck.new(24),
-			streetRow.new(false, 25, 5, [22, 24, 25], 2000, 10000, 30000, 75000, 92500, 110000, false, 24000, 15000),
-			streetSpecial.new(false, 26, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000),
-			streetRow.new(false, 27, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000, 15000),
-			streetRow.new(false, 28, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000, 15000),
-			streetAirport.new(false, 29, [13, 29], 400, 1000, false, 15000),
-			streetRow.new(false, 30, 6, [27, 28, 30], 2400, 12000, 36000, 85000, 102000, 120000, false, 28000, 15000),
+			streetRow.new(false, 25, 5, [22, 24, 25], 2000, 10000, 30000, 75000, 92500, 110000, false, 24000, 15000, "res://Kort/GateKort/Røsseren-Kort.png"),
+			streetSpecial.new(false, 26, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Nordmøre Stadion-Kort.png"),
+			streetRow.new(false, 27, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000, 15000, "res://Kort/GateKort/Løkkemyra-Kort.png"),
+			streetRow.new(false, 28, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000, 15000, "res://Kort/GateKort/Storkaia-Kort.png"),
+			streetAirport.new(false, 29, [13, 29], 400, 1000, false, 15000, "res://Kort/GateKort/Flyplass2-Kort.png"),
+			streetRow.new(false, 30, 6, [27, 28, 30], 2400, 12000, 36000, 85000, 102000, 120000, false, 28000, 15000, "res://Kort/GateKort/Futura-Kort.png"),
 			streetLuck.new(31),
-			streetRow.new(false, 32, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000, 20000),
-			streetRow.new(false, 33, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000, 20000),
+			streetRow.new(false, 32, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000, 20000, "res://Kort/GateKort/Rådhusplassen-Kort.png"),
+			streetRow.new(false, 33, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000, 20000, "res://Kort/GateKort/GrautByen-Kort.png"),
 			streetLuck.new(34),
-			streetRow.new(false, 35, 7, [32, 33, 35], 2800, 15000, 45000, 100000, 120000, 140000, false, 32000, 20000),
-			streetSpecial.new(false, 36, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000),
+			streetRow.new(false, 35, 7, [32, 33, 35], 2800, 15000, 45000, 100000, 120000, 140000, false, 32000, 20000, "res://Kort/GateKort/Bryggekanten-Kort.png"),
+			streetSpecial.new(false, 36, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Atlanterhavsbadet-Kort.png"),
 			streetLuck.new(37),
-			streetRow.new(false, 38, 8, [38, 40], 3500, 17500, 50000, 110000, 130000, 150000, false, 35000, 20000),
+			streetRow.new(false, 38, 8, [38, 40], 3500, 17500, 50000, 110000, 130000, 150000, false, 35000, 20000, "res://Kort/GateKort/Olav v's Gate-Kort.png"),
 			misc.new(39, "tax"),
-			streetRow.new(false, 40, 8, [38, 40], 5000, 20000, 60000, 140000, 170000, 200000, false, 40000, 20000),
+			streetRow.new(false, 40, 8, [38, 40], 5000, 20000, 60000, 140000, 170000, 200000, false, 40000, 20000, "res://Kort/GateKort/Kongens Gate-Kort.png"),
 	]
+
+	
 	cardList = [
 		cards.new("get", 30000, "Du får Damm-prisen for landets mest lovende Millionær-aspirant Motta kr. 30.000"),
 		cards.new("get", 15000, "Du selger aksjer og mottar kr. 15.000."),
@@ -306,25 +325,32 @@ func _blackcar():
 
 
 func addPlayers():
-	playerlists = [player1,
+	playerlist = [player1,
 					player2,
 					player3,
 					player4]
+	playerListCard = [player1Card,
+					player2Card, 
+					player3Card, 
+					player3Card]
 	
-	var playerData = [Vector2i(-11200, -7000), 
-					Vector2i(9500, -7000), 
+	var playerData = [Vector2i(-11200, -6200), 
+					Vector2i(9500, -6200), 
 					Vector2i(-11200, 1000), 
 					Vector2i(9500, 1000),]
 	
 	for i in players:
 		print("added new")
-		playerlists[i] = Label.new()
-		add_child(playerlists[i])
-		playerlists[i].position = playerData[i]
-		playerlists[i].text = "Player %s \n%s \nMoney: %s" % [i+1, carlist[i], playerList[i].money]
-		playerlists[i].add_theme_font_size_override("font_size", 300)
-	
-
+		playerlist[i] = Label.new()
+		add_child(playerlist[i])
+		playerlist[i].position = playerData[i]
+		playerlist[i].text = "Player %s \n%s \nMoney: %s" % [i+1, carlist[i], playerList[i].money]
+		playerlist[i].add_theme_font_size_override("font_size", 300)
+		
+		playerListCard[i] = HBoxContainer.new()
+		add_child(playerListCard[i])
+		playerlist[i].position = playerData[i - Vector2i(0, 1000)]
+		
 
 func car():
 	var startpos =  Vector2(-1300,4660)
@@ -382,8 +408,8 @@ func car():
 
 
 func moveCar():
-	current_position = playerList[currentPlayer-1].playerPos
-	playerList[currentPlayer-1].lastPos = current_position
+	current_position = playerList[currentPlayer].playerPos
+	playerList[currentPlayer].lastPos = current_position
 	current_position = (current_position + result) % 40
 	if current_position == 0:
 		current_position += 40
@@ -393,72 +419,80 @@ func moveCar():
 	var x = center.x + radius * cos(rad_angle+4.5)
 	var y = center.y + radius * sin(rad_angle+4.5)
 	
-	playerList[currentPlayer-1].car.position = Vector2(x, y)
-	playerList[currentPlayer-1].car.rotation_degrees = angle+17
-	playerList[currentPlayer-1].playerPos = current_position
-	if playerList[currentPlayer-1].lastPos > playerList[currentPlayer-1].playerPos:
-		playerList[currentPlayer-1].money += 20_000
+	playerList[currentPlayer].car.position = Vector2(x, y)
+	playerList[currentPlayer].car.rotation_degrees = angle+180
+	playerList[currentPlayer].playerPos = current_position
+	if playerList[currentPlayer].lastPos > playerList[currentPlayer].playerPos:
+		playerList[currentPlayer].money += 20_000
 		updateScreen()
-	print("playerpos",playerList[currentPlayer-1].playerPos)
+	print("playerpos",playerList[currentPlayer].playerPos)
 	
 
 
 func _on_roll_dice_button_up():
+	if currentPlayer > players-1:
+		currentPlayer = 0
 	var die1 = rng1.randi_range(1,6)
 	var die2 = rng2.randi_range(1,6)
 	result = die1+die2
 	print("die", result)
-	if playerList[currentPlayer-1].skipTurns == 0:
+	if playerList[currentPlayer].skipTurns == 0:
 		print("hello")
 		moveCar()
 	checkStreet()
 	updateScreen()
 	for i in players:
-		playerlists[i].add_theme_color_override("font_color", Color(1, 1, 1))
-	playerlists[currentPlayer-1].add_theme_color_override("font_color", Color(0, 1, 0))
-	if playerList[currentPlayer-1].skipTurns != 0:
-		playerList[currentPlayer-1].skipTurns -= 1
-		if playerList[currentPlayer-1].inJail == true and playerList[currentPlayer-1].skipTurns == 0:
-			playerList[currentPlayer-1].inJail = false
-		print("skipturn",playerList[currentPlayer-1].skipTurns)
-	if playerList[currentPlayer-1].lastPos != 21:
-		playerList[currentPlayer-1].freePark = false
+		playerlist[i].add_theme_color_override("font_color", Color(1, 1, 1))
+	playerlist[currentPlayer].add_theme_color_override("font_color", Color(0, 1, 0))
+	if playerList[currentPlayer].skipTurns != 0:
+		playerList[currentPlayer].skipTurns -= 1
+		if playerList[currentPlayer].inJail == true and playerList[currentPlayer].skipTurns == 0:
+			playerList[currentPlayer].inJail = false
+		print("skipturn",playerList[currentPlayer].skipTurns)
+	if playerList[currentPlayer].lastPos != 21:
+		playerList[currentPlayer].freePark = false
 	currentPlayer += 1
 	print("currentplayer",currentPlayer)
 	print("\n \n \n")
-	if currentPlayer > players:
-		currentPlayer = 1
+
 
 				
 func checkStreet():
 	var current_street = street[current_position-1]
-	var activePlayer = playerList[currentPlayer-1]
+	var activePlayer = playerList[currentPlayer]
 	match current_street.type:
 		
-		#TODO: give money to owner
 		"Street":
 			if current_street.owner != 0:
 				if currentPlayer != current_street.owner:
 					if not activePlayer.freePark:
+						for i in current_street.rowNumbers:
+							if street[i].owner == currentPlayer:
+								streetsOwned += 1
+							print("streets owned ", streetsOwned)
+							
+							# TODO: fix street check
+							
 						match current_street.houses:
 							0:
 								activePlayer.money = activePlayer.money - current_street.rent
 								playerList[current_street.owner-1].money += current_street.rent
 							1: 
 								activePlayer.money = activePlayer.money - current_street.house1
-								playerList[current_street.owner-1].money += current_street.house1
+								playerList[current_street.owner].money += current_street.house1
 							2: 
 								activePlayer.money = activePlayer.money - current_street.house2
-								playerList[current_street.owner-1].money += current_street.house2
+								playerList[current_street.owner].money += current_street.house2
 							3: 
 								activePlayer.money = activePlayer.money - current_street.house3
-								playerList[current_street.owner-1].money += current_street.house3
+								playerList[current_street.owner].money += current_street.house3
 							4: 
 								activePlayer.money = activePlayer.money - current_street.house4
-								playerList[current_street.owner-1].money += current_street.house4
+								playerList[current_street.owner].money += current_street.house4
 							5:
 								activePlayer.money = activePlayer.money - current_street.house5
-								playerList[current_street.owner-1].money += current_street.house5
+								playerList[current_street.owner].money += current_street.house5
+						streetsOwned = 0
 			else:
 				buyButton.visible = !buyButton.visible
 				rollDiceButton.visible = !rollDiceButton.visible
@@ -473,16 +507,16 @@ func checkStreet():
 						match boatsOwned:
 							1:
 								activePlayer.money = activePlayer.money - current_street.one
-								playerList[current_street.owner-1].money += current_street.one
+								playerList[current_street.owner].money += current_street.one
 							2:
 								activePlayer.money = activePlayer.money - current_street.two
-								playerList[current_street.owner-1].money += current_street.two
+								playerList[current_street.owner].money += current_street.two
 							3:
 								activePlayer.money = activePlayer.money - current_street.three
-								playerList[current_street.owner-1].money += current_street.three
+								playerList[current_street.owner].money += current_street.three
 							4:
 								activePlayer.money = activePlayer.money - current_street.four
-								playerList[current_street.owner-1].money += current_street.four
+								playerList[current_street.owner].money += current_street.four
 			else:
 				buyButton.visible = !buyButton.visible
 				rollDiceButton.visible = !rollDiceButton.visible
@@ -497,19 +531,19 @@ func checkStreet():
 						match airportsOwned:
 							1:
 								activePlayer.money = current_street.one * 400
-								playerList[current_street.owner-1].money += current_street.one * 400
+								playerList[current_street.owner].money += current_street.one * 400
 							2:
 								activePlayer.money = current_street.two * 1000
-								playerList[current_street.owner-1].money += current_street.two * 1000
+								playerList[current_street.owner].money += current_street.two * 1000
 					
 			else:
 				buyButton.visible = !buyButton.visible
 				rollDiceButton.visible = !rollDiceButton.visible
 				auctionButton.visible = !auctionButton.visible
 		"jail":
-			if not playerList[currentPlayer-1].inJail:
-				playerList[currentPlayer-1].inJail = true
-				playerList[currentPlayer-1].skipTurns = 3
+			if not playerList[currentPlayer].inJail:
+				playerList[currentPlayer].inJail = true
+				playerList[currentPlayer].skipTurns = 3
 
 		"luck":
 			if cardList.size() > 0:
@@ -539,32 +573,78 @@ func checkStreet():
 			
 func updateScreen():
 	for i in players:
-		playerlists[i].text = "Player %s \n%s \nMoney: %s" % [i+1, carlist[i], playerList[i].money]
+		playerlist[i].text = "Player %s \n%s \nMoney: %s" % [i+1, carlist[i], playerList[i].money]
+		
+	for i in street:
+		playerListCard[i].add_child(Sprite2D.new())
 	
 func buy():
+	if currentPlayer > players-1:
+		currentPlayer = 0
 	var current_street = street[current_position-1]
-	if playerList[currentPlayer-1].money >= current_street.price:
+	if playerList[currentPlayer].money >= current_street.price:
 		playerList[currentPlayer-1].money -= current_street.price
 		current_street.owner = currentPlayer
-		print(current_street.owner)
+		print("current street owner",current_street.owner)
 		doneButton.visible = !doneButton.visible
 		buyButton.visible = !buyButton.visible
 		auctionButton.visible = !auctionButton.visible
 	else:
 		auction()
 	updateScreen()
+	
 func auction():
-	doneButton.visible = !doneButton.visible
 	buyButton.visible = !buyButton.visible
 	auctionButton.visible = !auctionButton.visible
-
+	bid.visible = !bid.visible
+	var current_street = street[current_position-1]
+	
+	bidInput.text = str(current_street.price+1000)
 	#TODO: add auction
-
+	
+	
+	
+	
 func done():
 	doneButton.visible = !doneButton.visible
 	rollDiceButton.visible = !rollDiceButton.visible
 	for i in players:
-		playerlists[i].add_theme_color_override("font_color", Color(1, 1, 1))
-	playerlists[currentPlayer-1].add_theme_color_override("font_color", Color(0, 1, 0))
+		playerlist[i].add_theme_color_override("font_color", Color(1, 1, 1))
+	playerlist[currentPlayer].add_theme_color_override("font_color", Color(0, 1, 0))
+	
+	
 	#TODO: add houses, pledge
 	#pledge is not important
+
+
+func pass_button():
+	if currPlayer > players:
+		currPlayer = 1
+	passedPlayers += 1
+	if passedPlayers == players and currentBid == 0:
+		rollDiceButton.visible = !rollDiceButton.visible
+		bid.visible = !bid.visible
+	elif passedPlayers == players and currentBid != 0:
+		playerList[currPlayer-1].money -= currentBid
+		street[currPlayer-1].owner = currPlayer-1
+		updateScreen()
+		rollDiceButton.visible = !rollDiceButton.visible
+		bid.visible = !bid.visible
+	for i in players:
+		playerlist[i].add_theme_color_override("font_color", Color(1, 1, 1))
+	playerlist[currPlayer-1].add_theme_color_override("font_color", Color(0, 1, 0))
+	currPlayer += 1
+
+	
+func bid_button():
+	var new_text = bidInput.text
+	if currPlayer > players:
+		currPlayer = 1
+	if new_text.is_valid_int():
+		new_text = int(new_text)
+		for i in players:
+			playerlist[i].add_theme_color_override("font_color", Color(1, 1, 1))
+		playerlist[currPlayer-1].add_theme_color_override("font_color", Color(0, 1, 0))
+		currentBid = new_text
+		bidInput.text = str(new_text+1000)
+		currPlayer += 1
