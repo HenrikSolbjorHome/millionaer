@@ -15,6 +15,8 @@ var playerListCard = []
 var cardList = []
 var usedCardList = []
 var propertyCards = []
+var propertyCardsOwned = []
+var playerData = []
 var selected = 0
 var carlist = []
 var active = true
@@ -29,7 +31,11 @@ var result: int
 var currentBid: int = 0
 var currPlayer: int = 1
 var passedPlayers: int = 0
-var box
+var offset_x:int = 0
+var offset_y:int = 1200
+var row_count:int = 0
+var displayed_cards = {}
+var clicked = 0
 
 signal camera
 signal cameraMain
@@ -339,7 +345,7 @@ func addPlayers():
 					player3Card, 
 					player3Card]
 	
-	var playerData = [Vector2i(-11200, -6200), 
+	playerData = [Vector2i(-11200, -6200), 
 					Vector2i(9500, -6200), 
 					Vector2i(-11200, 1000), 
 					Vector2i(9500, 1000),]
@@ -353,25 +359,6 @@ func addPlayers():
 		playerlist[i].add_theme_font_size_override("font_size", 300)
 		
 		
-		var vbox = VBoxContainer.new()
-		vbox.name = "VBox"
-		vbox.position = playerData[i]
-		vbox.size_flags_horizontal = 900
-		vbox.size_flags_vertical = 900
-		vbox.anchor_left = 0.1
-		vbox.anchor_right = 0.9
-		vbox.anchor_top = 0.1
-		vbox.anchor_bottom = 0.9
-		
-		add_child(vbox)
-		
-		box = BoxContainer.new()
-		add_child(playerListCard[i])
-		playerlist[i].position = playerData[i] - Vector2i(0, 1000)
-		box.size_flags_horizontal = BoxContainer.SIZE_EXPAND_FILL
-		box.size_flags_vertical = BoxContainer.SIZE_EXPAND_FILL
-		box.custom_minimum_size = Vector2(150, 150)  # Set box size
-		vbox.add_child(box)
 
 func car():
 	var startpos =  Vector2(-1300,4660)
@@ -595,13 +582,44 @@ func checkStreet():
 func updateScreen():
 	for i in players:
 		playerlist[i].text = "Player %s \n%s \nMoney: %s" % [i+1, carlist[i], playerList[i].money]
-		
-	for i in players:
-		var sprite = Sprite2D.new()
-		sprite.texture = street[propertyCards[i]]
-		box.add_child(sprite)
-		
 	
+	for i in players:
+		for y in propertyCards:
+			var card_path = str(street[y - 1].card)
+			
+			if street[y-1].owner == i+1 and not displayed_cards.has(card_path):
+				var card_holder = TextureRect.new()
+				var sprite = load(card_path)
+				card_holder.texture = sprite
+				card_holder.position = playerData[i] + Vector2i(offset_x, offset_y)
+				card_holder.scale = Vector2(2.2,2.2)
+				add_child(card_holder)
+				print("playerdata:", playerData)
+				print("Added card for player", i, "at position", card_holder.position)
+				card_holder.mouse_filter = Control.MOUSE_FILTER_STOP
+				displayed_cards[card_path] = true
+				
+				card_holder.connect("gui_input", Callable(self, "_on_card_clicked").bind(card_holder, card_holder.position))
+				
+				row_count += 1
+				offset_x += 2200
+				
+				if row_count == 2:
+					offset_x = 0
+					offset_y += 1200
+					row_count = 0
+					
+func _on_card_clicked(event, card_holder, cardPos):
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		clicked = !clicked
+		if clicked:
+			card_holder.scale = Vector2(4, 4)
+			card_holder.position = Vector2(-2000, -2000)
+		else:
+			card_holder.scale = Vector2(2.2, 2.2)
+			card_holder.position = cardPos
+	
+
 func buy():
 	if currentPlayer > players-1:
 		currentPlayer = 0
@@ -654,10 +672,12 @@ func pass_button():
 		updateScreen()
 		rollDiceButton.visible = !rollDiceButton.visible
 		bid.visible = !bid.visible
+		passedPlayers = 0
 	for i in players:
 		playerlist[i].add_theme_color_override("font_color", Color(1, 1, 1))
 	playerlist[currPlayer-1].add_theme_color_override("font_color", Color(0, 1, 0))
 	currPlayer += 1
+	print("passed", passedPlayers)
 
 	
 func bid_button():
