@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cdvmhv5vcbea1"]
+[gd_scene load_steps=21 format=3 uid="uid://cdvmhv5vcbea1"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_c1hkb"]
 [ext_resource type="Texture2D" uid="uid://cx1c3nnlkcfnf" path="res://Kristiansund.png" id="2_3mq77"]
@@ -30,9 +30,6 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_02ooa"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vin8o"]
-bg_color = Color(0.0627451, 0.0627451, 0.0627451, 0.721569)
 
 [node name="Node2D" type="Node2D"]
 position = Vector2(-121, 0)
@@ -390,31 +387,21 @@ offset_bottom = 49573.0
 color = Color(0.490196, 0.490196, 0.490196, 0.396078)
 
 [node name="pledge" type="Button" parent="Action"]
-offset_left = -4190.0
-offset_top = -2010.0
-offset_right = -2145.0
-offset_bottom = -1320.0
+offset_left = -4200.0
+offset_top = -2000.0
+offset_right = -2155.0
+offset_bottom = -1310.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 500
-theme_override_styles/normal = SubResource("StyleBoxFlat_vin8o")
-theme_override_styles/hover = SubResource("StyleBoxFlat_vin8o")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_vin8o")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_vin8o")
-theme_override_styles/focus = SubResource("StyleBoxFlat_vin8o")
 text = "Pantsett"
 
 [node name="buyHouse" type="Button" parent="Action"]
-offset_left = 2010.0
-offset_top = -2010.0
-offset_right = 4101.0
-offset_bottom = -1320.0
+offset_left = 2000.0
+offset_top = -2000.0
+offset_right = 4091.0
+offset_bottom = -1310.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 500
-theme_override_styles/normal = SubResource("StyleBoxFlat_vin8o")
-theme_override_styles/hover = SubResource("StyleBoxFlat_vin8o")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_vin8o")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_vin8o")
-theme_override_styles/focus = SubResource("StyleBoxFlat_vin8o")
 text = "Kjøp hus"
 
 [connection signal="camera" from="." to="Camera2D" method="_on_node_2d_camera"]
@@ -440,3 +427,4 @@ text = "Kjøp hus"
 [connection signal="button_up" from="Main_menu/Settings" to="Camera2D" method="_on_settings_button_up"]
 [connection signal="button_up" from="Main_menu/Play" to="Camera2D" method="_on_play_button_up"]
 [connection signal="button_up" from="Back from settings" to="Camera2D" method="_on_button_button_up"]
+[connection signal="button_up" from="Action/pledge" to="." method="_on_pledge_button_up"]
