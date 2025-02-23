@@ -197,6 +197,20 @@ class cards:
 		
 
 func _ready():
+	
+	var clickableArea = Area2D.new()
+	clickableArea.position = center
+	add_child(clickableArea)
+	
+	var collisionShape = CollisionShape2D.new()
+	collisionShape.shape = CircleShape2D.new()
+	collisionShape.shape.radius = radius
+	clickableArea.add_child(collisionShape)
+	
+	clickableArea.connect("input_event", _on_tile_clicked)
+	
+	
+	
 	#				owner, street number, row, rownumbers, rent, house1, house2, house3, house4, house5, pledged
 	street = [
 			misc.new(1, "start"),
@@ -282,6 +296,24 @@ func _process(_delta):
 		cameraMain.emit()
 		car()
 		addPlayers()
+
+func _on_tile_clicked(viewport, event, shape_idx):
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			var click_position = get_global_mouse_position()
+			var clicked_tile_index = get_tile_index_from_position(click_position)
+			print("Clicked on tile index: ", clicked_tile_index)
+			
+func get_tile_index_from_position(click_position: Vector2) -> int:
+	var direction = click_position - center
+	var angle = rad_to_deg(direction.angle()) # Get the angle of the click
+	
+	
+	var tile_index = int(fmod(angle + 360.0, 360.0) / (360.0 / 40))
+	
+	var offsetTileIndex = (tile_index + 30) % 41
+	
+	return offsetTileIndex
 
 func _on_button_button_up():
 	playerList.append(player.new())
@@ -586,7 +618,6 @@ func checkStreet():
 			else:
 				cardList = usedCardList
 				usedCardList = []
-		#TODO: add all buyable streets, luck and other streets
 		"tax":
 			activePlayer.money -= 10_000
 

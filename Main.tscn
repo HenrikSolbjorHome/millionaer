@@ -42,7 +42,7 @@ position = Vector2(-115071, -44150)
 zoom = Vector2(0.1, 0.1)
 script = ExtResource("5_wlxq0")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Board" type="Sprite2D" parent="."]
 scale = Vector2(3, 3)
 texture = ExtResource("2_3mq77")
 
@@ -376,6 +376,8 @@ scale = Vector2(2.5, 2.5)
 [node name="Dice2" type="Sprite2D" parent="Die"]
 position = Vector2(873, 0)
 scale = Vector2(2.5, 2.5)
+
+[node name="Area2D" type="Area2D" parent="."]
 
 [connection signal="camera" from="." to="Camera2D" method="_on_node_2d_camera"]
 [connection signal="cameraMain" from="." to="Camera2D" method="_on_node_2d_camera_main"]
