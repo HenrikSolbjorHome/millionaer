@@ -475,7 +475,7 @@ func checkStreet():
 				if currentPlayer != current_street.owner:
 					if not activePlayer.freePark:
 						for i in current_street.rowNumbers:
-							if street[i].owner == currentPlayer:
+							if street[i-1].owner == currentPlayer:
 								streetsOwned += 1
 							print("streets owned ", streetsOwned)
 							
@@ -585,8 +585,10 @@ func updateScreen():
 	
 	for i in players:
 		for y in propertyCards:
+			print()
+			print("street: ", street[y-1].card)
+			print("street owner: ", street[y-1].owner)
 			var card_path = str(street[y - 1].card)
-			
 			if street[y-1].owner == i+1 and not displayed_cards.has(card_path):
 				var card_holder = TextureRect.new()
 				var sprite = load(card_path)
@@ -621,11 +623,13 @@ func _on_card_clicked(event, card_holder, cardPos):
 	
 
 func buy():
-	if currentPlayer > players-1:
+	if currentPlayer > players:
+		print("current Player: ", currentPlayer)
 		currentPlayer = 0
 	var current_street = street[current_position-1]
-	if playerList[currentPlayer].money >= current_street.price:
+	if playerList[currentPlayer-1].money >= current_street.price:
 		playerList[currentPlayer-1].money -= current_street.price
+		
 		current_street.owner = currentPlayer
 		print("current street owner",current_street.owner)
 		doneButton.visible = !doneButton.visible

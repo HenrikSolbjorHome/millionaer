@@ -1,7 +1,7 @@
+Sprite2D
 TextureRect
 VBoxContainer
 Button
-Sprite2D
 Camera2D
 Node2D
 ScrollContainer
