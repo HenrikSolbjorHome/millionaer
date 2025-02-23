@@ -1,9 +1,10 @@
+Node2D
+Node
 Sprite2D
 TextureRect
 VBoxContainer
 Button
 Camera2D
-Node2D
 ScrollContainer
 VBoxContainer
 Control
@@ -14,7 +15,6 @@ Label
 HBoxContainer
 SubViewport
 CanvasModulate
-Node
 Line2D
 Polygon2D
 CollisionShape2D
