@@ -1,11 +1,12 @@
+ColorRect
 Area2D
-CollisionPolygon2D
+Button
 Node2D
+CollisionPolygon2D
 Node
 Sprite2D
 TextureRect
 VBoxContainer
-Button
 Camera2D
 ScrollContainer
 VBoxContainer

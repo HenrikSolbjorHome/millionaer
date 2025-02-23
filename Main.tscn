@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cdvmhv5vcbea1"]
+[gd_scene load_steps=22 format=3 uid="uid://cdvmhv5vcbea1"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_c1hkb"]
 [ext_resource type="Texture2D" uid="uid://cx1c3nnlkcfnf" path="res://Kristiansund.png" id="2_3mq77"]
@@ -31,20 +31,23 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_02ooa"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vin8o"]
+bg_color = Color(0.0627451, 0.0627451, 0.0627451, 0.721569)
+
 [node name="Node2D" type="Node2D"]
 position = Vector2(-121, 0)
 script = ExtResource("1_c1hkb")
 metadata/_edit_horizontal_guides_ = []
+
+[node name="Board" type="Sprite2D" parent="."]
+scale = Vector2(3, 3)
+texture = ExtResource("2_3mq77")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 z_index = 1
 position = Vector2(-115071, -44150)
 zoom = Vector2(0.1, 0.1)
 script = ExtResource("5_wlxq0")
-
-[node name="Board" type="Sprite2D" parent="."]
-scale = Vector2(3, 3)
-texture = ExtResource("2_3mq77")
 
 [node name="Done" type="Button" parent="."]
 unique_name_in_owner = true
@@ -377,7 +380,42 @@ scale = Vector2(2.5, 2.5)
 position = Vector2(873, 0)
 scale = Vector2(2.5, 2.5)
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Action" type="Node2D" parent="."]
+
+[node name="background" type="ColorRect" parent="Action"]
+offset_left = -50483.0
+offset_top = -50427.0
+offset_right = 49517.0
+offset_bottom = 49573.0
+color = Color(0.490196, 0.490196, 0.490196, 0.396078)
+
+[node name="pledge" type="Button" parent="Action"]
+offset_left = -4190.0
+offset_top = -2010.0
+offset_right = -2145.0
+offset_bottom = -1320.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 500
+theme_override_styles/normal = SubResource("StyleBoxFlat_vin8o")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vin8o")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vin8o")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_vin8o")
+theme_override_styles/focus = SubResource("StyleBoxFlat_vin8o")
+text = "Pantsett"
+
+[node name="buyHouse" type="Button" parent="Action"]
+offset_left = 2010.0
+offset_top = -2010.0
+offset_right = 4101.0
+offset_bottom = -1320.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 500
+theme_override_styles/normal = SubResource("StyleBoxFlat_vin8o")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vin8o")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vin8o")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_vin8o")
+theme_override_styles/focus = SubResource("StyleBoxFlat_vin8o")
+text = "Kjøp hus"
 
 [connection signal="camera" from="." to="Camera2D" method="_on_node_2d_camera"]
 [connection signal="cameraMain" from="." to="Camera2D" method="_on_node_2d_camera_main"]

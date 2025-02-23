@@ -9,6 +9,7 @@ extends Node2D
 @onready var passButton = $bid/passButton
 @onready var dice1 = $Die/Dice1
 @onready var dice2 = $Die/Dice2
+@onready var action = $Action
 
 
 var players
@@ -80,9 +81,9 @@ var current_position: int = 0
 
 
 class player:
-	var money = 150_000
+	var money: int = 150_000
 	var skipTurns: int
-	var playerPos: int
+	var playerPos: int = 1
 	var lastPos: int
 	var freePark: bool
 	var cards = []
@@ -198,18 +199,6 @@ class cards:
 
 func _ready():
 	
-	var clickableArea = Area2D.new()
-	clickableArea.position = center
-	add_child(clickableArea)
-	
-	var collisionShape = CollisionShape2D.new()
-	collisionShape.shape = CircleShape2D.new()
-	collisionShape.shape.radius = radius
-	clickableArea.add_child(collisionShape)
-	
-	clickableArea.connect("input_event", _on_tile_clicked)
-	
-	
 	
 	#				owner, street number, row, rownumbers, rent, house1, house2, house3, house4, house5, pledged
 	street = [
@@ -297,23 +286,6 @@ func _process(_delta):
 		car()
 		addPlayers()
 
-func _on_tile_clicked(viewport, event, shape_idx):
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			var click_position = get_global_mouse_position()
-			var clicked_tile_index = get_tile_index_from_position(click_position)
-			print("Clicked on tile index: ", clicked_tile_index)
-			
-func get_tile_index_from_position(click_position: Vector2) -> int:
-	var direction = click_position - center
-	var angle = rad_to_deg(direction.angle()) # Get the angle of the click
-	
-	
-	var tile_index = int(fmod(angle + 360.0, 360.0) / (360.0 / 40))
-	
-	var offsetTileIndex = (tile_index + 30) % 41
-	
-	return offsetTileIndex
 
 func _on_button_button_up():
 	playerList.append(player.new())
@@ -658,7 +630,7 @@ func updateScreen():
 				
 				card_holder.mouse_filter = Control.MOUSE_FILTER_STOP
 				
-				card_holder.connect("gui_input", Callable(self, "_on_card_clicked").bind(card_holder, card_holder.position))
+				card_holder.connect("gui_input", Callable(self, "_on_card_clicked").bind(card_holder, card_holder.position, y))
 				
 				player_offset["row_count"] += 1
 				player_offset["offset_x"] += 2200
@@ -668,15 +640,20 @@ func updateScreen():
 					player_offset["offset_y"] += 600
 					player_offset["row_count"] = 0
 					
-func _on_card_clicked(event, card_holder, cardPos):
+func _on_card_clicked(event, card_holder, cardPos, card):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		clicked = !clicked
 		if clicked:
 			card_holder.scale = Vector2(4, 4)
 			card_holder.position = Vector2(-2000, -2000)
+			
+			if street[card-1].owner == currentPlayer:
+				action.visible = !action.visible
+			
 		else:
 			card_holder.scale = Vector2(2.2, 2.2)
 			card_holder.position = cardPos
+			action.visible = !action.visible
 	
 
 func buy():
@@ -752,3 +729,7 @@ func bid_button():
 		currentBid = new_text
 		bidInput.text = str(new_text+1000)
 		currPlayer += 1
+
+
+func _on_pledge_button_up():
+	pass # Replace with function body.
