@@ -1,7 +1,8 @@
+Label
+Node2D
 ColorRect
 Area2D
 Button
-Node2D
 CollisionPolygon2D
 Node
 Sprite2D
@@ -14,7 +15,6 @@ Control
 Window
 OptionButton
 VSeparator
-Label
 HBoxContainer
 SubViewport
 CanvasModulate
