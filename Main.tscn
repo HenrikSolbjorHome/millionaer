@@ -1,8 +1,7 @@
-[gd_scene load_steps=21 format=3 uid="uid://cdvmhv5vcbea1"]
+[gd_scene load_steps=22 format=3 uid="uid://cdvmhv5vcbea1"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_c1hkb"]
 [ext_resource type="Texture2D" uid="uid://cx1c3nnlkcfnf" path="res://Kristiansund.png" id="2_3mq77"]
-[ext_resource type="Texture2D" uid="uid://lgstllkj4ugs" path="res://icon.svg" id="3_heh7a"]
 [ext_resource type="Texture2D" uid="uid://c3fx2pmbvgo1j" path="res://Svart-Bil – Kopi/Lyseblå-Bil.png" id="5_bsr08"]
 [ext_resource type="Script" path="res://Camera2D.gd" id="5_wlxq0"]
 [ext_resource type="Texture2D" uid="uid://s22ndrkix2tb" path="res://Svart-Bil – Kopi/Gul-Bil.png" id="6_llwdb"]
@@ -15,6 +14,8 @@
 [ext_resource type="Texture2D" uid="uid://10log6vev2du" path="res://CUQDXD8Sc0C-QLY65O89b.jpg" id="14_edth0"]
 [ext_resource type="Script" path="res://startmeny.gd" id="14_lqhx6"]
 [ext_resource type="PackedScene" uid="uid://wcdt61yesfya" path="res://window_mode_button.tscn" id="15_gt8wg"]
+[ext_resource type="Texture2D" uid="uid://yodwjq153wxm" path="res://bil-bilde2.jpg" id="16_d41h2"]
+[ext_resource type="Texture2D" uid="uid://dwbsfnemcn8ka" path="res://Snapchat-1589847942.jpg" id="16_d6273"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t68mv"]
 bg_color = Color(0.584314, 0.556863, 0.533333, 0)
@@ -36,15 +37,15 @@ position = Vector2(-121, 0)
 script = ExtResource("1_c1hkb")
 metadata/_edit_horizontal_guides_ = []
 
-[node name="Board" type="Sprite2D" parent="."]
-scale = Vector2(3, 3)
-texture = ExtResource("2_3mq77")
-
 [node name="Camera2D" type="Camera2D" parent="."]
 z_index = 1
 position = Vector2(-115071, -44150)
 zoom = Vector2(0.1, 0.1)
 script = ExtResource("5_wlxq0")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(3, 3)
+texture = ExtResource("2_3mq77")
 
 [node name="Done" type="Button" parent="."]
 unique_name_in_owner = true
@@ -172,18 +173,7 @@ theme_override_font_sizes/font_size = 1000
 text = "2"
 metadata/_edit_use_anchors_ = true
 
-[node name="Playercount" type="Sprite2D" parent="PlayerSelect"]
-z_index = -1
-position = Vector2(10034, -42777)
-scale = Vector2(62.515, 62.515)
-texture = ExtResource("3_heh7a")
-
 [node name="CarSelect" type="Node2D" parent="."]
-
-[node name="choose car" type="Sprite2D" parent="CarSelect"]
-position = Vector2(-42267, -12983.7)
-scale = Vector2(39.0625, 38.646)
-texture = ExtResource("3_heh7a")
 
 [node name="bluecar" type="Button" parent="CarSelect"]
 offset_left = -44610.8
@@ -289,6 +279,13 @@ position = Vector2(1017.92, 538.041)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("12_iw38e")
 
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = -33303.0
+offset_top = -49617.0
+offset_right = -5103.0
+offset_bottom = -32553.0
+scale = Vector2(0.471708, 0.862694)
+
 [node name="Window_Mode_Button" parent="." instance=ExtResource("15_gt8wg")]
 offset_left = -192406.0
 offset_top = -16004.0
@@ -366,70 +363,34 @@ theme_override_font_sizes/font_size = 500
 theme_override_styles/normal = SubResource("StyleBoxFlat_02ooa")
 text = "Back"
 
-[node name="Die" type="Node2D" parent="."]
-position = Vector2(0, -2854)
+[node name="Sprite2D3" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(-41860, -12786)
+scale = Vector2(2.93052, 2.11719)
+texture = ExtResource("16_d41h2")
 
-[node name="Dice1" type="Sprite2D" parent="Die"]
-position = Vector2(-627, -5)
-scale = Vector2(2.5, 2.5)
+[node name="Sprite2D6" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(6814, -44890)
+rotation = -3.13903
+scale = Vector2(9.37313, -2.5981)
+texture = ExtResource("16_d6273")
 
-[node name="Dice2" type="Sprite2D" parent="Die"]
-position = Vector2(873, 0)
-scale = Vector2(2.5, 2.5)
+[node name="Sprite2D4" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(15241, -44872)
+scale = Vector2(9.36808, 2.65232)
+texture = ExtResource("16_d6273")
 
-[node name="Action" type="Node2D" parent="."]
-visible = false
+[node name="Sprite2D5" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(6817, -40774)
+scale = Vector2(9.39257, 2.6625)
+texture = ExtResource("16_d6273")
 
-[node name="background" type="ColorRect" parent="Action"]
-offset_left = -50483.0
-offset_top = -50427.0
-offset_right = 49517.0
-offset_bottom = 49573.0
-color = Color(0.490196, 0.490196, 0.490196, 0.396078)
-
-[node name="pledge" type="Button" parent="Action"]
-offset_left = -4200.0
-offset_top = -2000.0
-offset_right = -2155.0
-offset_bottom = -1310.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 500
-text = "Pantsett"
-
-[node name="buyHouse" type="Button" parent="Action"]
-offset_left = 2000.0
-offset_top = -2000.0
-offset_right = 4091.0
-offset_bottom = -1310.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 500
-text = "Kjøp hus"
-
-[node name="Win" type="Node2D" parent="."]
-visible = false
-
-[node name="background" type="ColorRect" parent="Win"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -3523.0
-offset_top = -1241.0
-offset_right = 3417.0
-offset_bottom = 1242.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.686275)
-
-[node name="winnerText" type="Label" parent="Win"]
-unique_name_in_owner = true
-offset_left = -3353.0
-offset_top = -651.0
-offset_right = 3223.0
-offset_bottom = 714.0
-theme_override_font_sizes/font_size = 1000
-text = "Player Won!"
+[node name="Sprite2D" type="Sprite2D" parent="Sprite2D5"]
+position = Vector2(899.754, -0.00195313)
+texture = ExtResource("16_d6273")
 
 [connection signal="camera" from="." to="Camera2D" method="_on_node_2d_camera"]
 [connection signal="cameraMain" from="." to="Camera2D" method="_on_node_2d_camera_main"]
@@ -454,4 +415,3 @@ text = "Player Won!"
 [connection signal="button_up" from="Main_menu/Settings" to="Camera2D" method="_on_settings_button_up"]
 [connection signal="button_up" from="Main_menu/Play" to="Camera2D" method="_on_play_button_up"]
 [connection signal="button_up" from="Back from settings" to="Camera2D" method="_on_button_button_up"]
-[connection signal="button_up" from="Action/pledge" to="." method="_on_pledge_button_up"]
