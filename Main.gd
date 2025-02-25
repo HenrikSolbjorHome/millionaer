@@ -45,6 +45,7 @@ var displayed_cards = {}
 var player_offsets = {}
 var clicked = 0
 var activeCard
+var house
 
 signal camera
 signal cameraMain
@@ -116,6 +117,8 @@ class streetRow extends streets:
 	var pledged: bool
 	var type = "Street"
 	var housePrice: int
+	var houseTexture
+	
 	func _init(_owner, _streetNumber, _row, _rowNumbers, _rent, _house1, _house2, _house3, _house4, _house5, _pledged, _price, _housePrice, _card, _pledgedCard):
 		owner = _owner
 		streetNumber = _streetNumber
@@ -132,6 +135,7 @@ class streetRow extends streets:
 		housePrice = _housePrice
 		card = _card
 		pledgedCard = _pledgedCard
+		
 class streetSpecial extends streets:
 	var rowNumbers = []
 	var price: int
@@ -201,8 +205,6 @@ class cards:
 		
 
 func _ready():
-	
-	
 	#				owner, street number, row, rownumbers, rent, house1, house2, house3, house4, house5, pledged
 	street = [
 			misc.new(1, "start"),
@@ -368,35 +370,32 @@ func addPlayers():
 					Vector2i(7500, 1000),]
 	
 	for i in players:
-		print("added new")
 		playerlist[i] = Label.new()
 		add_child(playerlist[i])
 		playerlist[i].position = playerData[i]
 		playerlist[i].text = "Player %s \n%s \nMoney: %s" % [i+1, carlist[i], playerList[i].money]
 		playerlist[i].add_theme_font_size_override("font_size", 300)
 		
-func removePlayer(player):
-	playerlist.pop_at(player)
-	print("removed player: ",player)
+func removePlayer(playerID):
+	playerlist.pop_at(playerID)
 	players -= 1
 	for i in street.size():
-		if street[i].owner == player:
+		if street[i].owner == playerID:
 			street[i].owner = false
 	
 func checkPlayers():
 	for i in players:
-		print("players left: ", playerList.size())
 		if playerList.size() > 1:
-			print("player",i,": ", playerList[i-1].money)
 			if playerList[i-1].money < 1:
 				removePlayer(i-1)
 		else:
 			win(playerList[0].playerID)
+	if playerList[currentPlayer-1].money > 1_000_000:
+		win(currentPlayer+1)
 
-func win(player):
-	print("YIPPIE ", player, " WON!!!!")
+func win(playerID):
 	winner.visible = true
-	winnerLabel.text = "Player %s Won" % [player]
+	winnerLabel.text = "Player %s Won" % [playerID]
 
 func car():
 	var startpos =  Vector2(-1300,4660)
@@ -460,7 +459,7 @@ func moveCar():
 	if current_position == 0:
 		current_position += 40
 	
-	var angle = (current_position+22) * (9)
+	angle = (current_position+22) * (9)
 	var rad_angle = deg_to_rad(angle)
 	var x = center.x + radius * cos(rad_angle+4.5)
 	var y = center.y + radius * sin(rad_angle+4.5)
@@ -471,23 +470,19 @@ func moveCar():
 	if playerList[currentPlayer].lastPos > playerList[currentPlayer].playerPos:
 		playerList[currentPlayer].money += 20_000
 		updateScreen()
-	print("playerpos",playerList[currentPlayer].playerPos)
 	
-
-
 func _on_roll_dice_button_up():
 	checkPlayers()
 	if currentPlayer > players-1:
 		currentPlayer = 0
+		
 	var die1 = rng1.randi_range(1,6)
 	var die2 = rng2.randi_range(1,6)
 	dice1.texture = load(dice[die2-1])
 	dice2.texture = load(dice[die1-1])
 	
 	result = die1+die2
-	print("die 1: ", die1, " die 2: ", die2)
 	if playerList[currentPlayer].skipTurns == 0:
-		print("hello")
 		moveCar()
 	checkStreet()
 	updateScreen()
@@ -498,12 +493,9 @@ func _on_roll_dice_button_up():
 		playerList[currentPlayer].skipTurns -= 1
 		if playerList[currentPlayer].inJail == true and playerList[currentPlayer].skipTurns == 0:
 			playerList[currentPlayer].inJail = false
-		print("skipturn",playerList[currentPlayer].skipTurns)
 	if playerList[currentPlayer].lastPos != 21:
 		playerList[currentPlayer].freePark = false
 	currentPlayer += 1
-	print("currentplayer",currentPlayer)
-	print("\n \n \n")
 	checkPlayers()
 
 				
@@ -520,7 +512,6 @@ func checkStreet():
 							for i in current_street.rowNumbers:
 								if street[i-1].owner == currentPlayer:
 									streetsOwned += 1
-								print("streets owned ", streetsOwned)
 								
 								# TODO: fix street check
 								
@@ -607,7 +598,6 @@ func checkStreet():
 						activePlayer.money -= cardList[card-1].amount
 					"get":
 						activePlayer.money += cardList[card-1].amount
-				print(cardList[card-1].message)
 				cardList.remove_at(card-1)
 
 			else:
@@ -622,7 +612,7 @@ func checkStreet():
 			
 func updateScreen():
 	for i in players:
-		playerlist[i].text = "Player %s \n%s \nMoney: %s" % [playerList[i].playerID, carlist[i], playerList[i].money]
+		playerlist[i].text = "Player %s \n%s \nMoney: %s \n %s" % [playerList[i].playerID, carlist[i], playerList[i].money, "Jail Time: "+str(playerList[i].skipTurns) if playerList[i].skipTurns > 0 else ""]
 	
 	for i in players:
 		if not player_offsets.has(i):
@@ -646,8 +636,6 @@ func updateScreen():
 				cardHolders[str(current_position)] = card_holder
 				displayed_cards[card_path] = true
 				
-				print("playerdata:", playerData)
-				print("Added card for player", i, "at position", card_holder.position)
 				
 				card_holder.mouse_filter = Control.MOUSE_FILTER_STOP
 				
@@ -686,7 +674,6 @@ func buy():
 		playerList[currentPlayer-1].money -= current_street.price
 		
 		current_street.owner = currentPlayer
-		print("current street owner",current_street.owner)
 		doneButton.visible = !doneButton.visible
 		buyButton.visible = !buyButton.visible
 		auctionButton.visible = !auctionButton.visible
@@ -701,10 +688,6 @@ func auction():
 	var current_street = street[current_position-1]
 	
 	bidInput.text = str(current_street.price+1000)
-	#TODO: add auction
-	
-	
-	
 	
 func done():
 	doneButton.visible = !doneButton.visible
@@ -713,11 +696,6 @@ func done():
 		playerlist[i].add_theme_color_override("font_color", Color(1, 1, 1))
 	playerlist[currentPlayer-1].add_theme_color_override("font_color", Color(0, 1, 0))
 	
-	
-	#TODO: add houses, pledge
-	#pledge is not important
-
-
 func pass_button():
 	if currPlayer > players:
 		currPlayer = 1
@@ -726,19 +704,18 @@ func pass_button():
 		rollDiceButton.visible = !rollDiceButton.visible
 		bid.visible = !bid.visible
 		
-	elif passedPlayers == players and currentBid and playerList[currPlayer-1].money > 0:
-				playerList[currPlayer-1].money -= currentBid
-				street[current_position-1].owner = currPlayer
-				updateScreen()
-				rollDiceButton.visible = !rollDiceButton.visible
-				bid.visible = !bid.visible
-				passedPlayers = 0
+	elif passedPlayers >= players and currentBid and playerList[currPlayer-1].money > 0:
+		playerList[currPlayer-1].money -= currentBid
+		street[current_position-1].owner = currPlayer
+		updateScreen()
+		rollDiceButton.visible = !rollDiceButton.visible
+		bid.visible = !bid.visible
+		passedPlayers = 0
 	
 	for i in players:
 		playerlist[i].add_theme_color_override("font_color", Color(1, 1, 1))
 	playerlist[currPlayer-1].add_theme_color_override("font_color", Color(0, 1, 0))
 	currPlayer += 1
-	print("passed", passedPlayers)
 
 	
 func bid_button():
@@ -751,7 +728,7 @@ func bid_button():
 			playerlist[i].add_theme_color_override("font_color", Color(1, 1, 1))
 		playerlist[currPlayer-1].add_theme_color_override("font_color", Color(0, 1, 0))
 		currentBid = new_text + 1000
-		bidInput.text = str(new_text+1000)
+		bidInput.text = str(currentBid)
 		currPlayer += 1
 	passedPlayers = 0
 
@@ -776,3 +753,51 @@ func _on_pledge_button_up():
 			
 			card_holder.texture = sprite
 			updateScreen()
+
+
+func _on_buy_house_button_up():
+	if street[activeCard-1].type == "Street":
+		var streetsOwnedDisp = []
+		for i in street[activeCard-1].rowNumbers:
+			if street[i-1].owner == currentPlayer:
+				streetsOwnedDisp.append(i)
+		if streetsOwnedDisp != street[activeCard-1].rowNumbers:
+			if street[activeCard-1].houses != 5:
+				street[activeCard-1].houses += 1
+				playerList[currentPlayer-1].money -= street[activeCard-1].housePrice
+				updateScreen()
+			if not street[activeCard-1].houseTexture:
+				house = Sprite2D.new()
+				add_child(house)
+			street[activeCard-1].houseTexture = house
+			match street[activeCard-1].houses:
+				1:
+					street[activeCard-1].houseTexture.texture = load("res://hus/Hus1.png")
+				2:
+					street[activeCard-1].houseTexture.texture = load("res://hus/Hus2.png")
+					street[activeCard-1].houseTexture.scale = Vector2(0.75, 0.75)
+				3:
+					street[activeCard-1].houseTexture.texture = load("res://hus/Hus3.png")
+					street[activeCard-1].houseTexture.scale = Vector2(0.5, 0.5)
+				4:
+					street[activeCard-1].houseTexture.texture = load("res://hus/Hus4.png")
+					street[activeCard-1].houseTexture.scale = Vector2(0.5, 0.5)
+				5:
+					if street[activeCard-1].row != 40:
+						street[activeCard-1].houseTexture.texture = load("res://hus/Hotell.png")
+						street[activeCard-1].houseTexture.scale = Vector2(0.5, 0.5)
+					else:
+						street[activeCard-1].houseTexture.texture = load("res://hus/Slott.png")
+						street[activeCard-1].houseTexture.scale = Vector2(0.5, 0.5)
+			
+			angle = (activeCard+22) * (9)
+			var houseRadius = 3500
+			
+			
+			var rad_angle = deg_to_rad(angle)
+			var x = center.x + houseRadius * cos(rad_angle+4.5)
+			var y = center.y + houseRadius * sin(rad_angle+4.5)
+			
+			street[activeCard-1].houseTexture.rotation = angle - PI
+			print(angle-PI)
+			street[activeCard-1].houseTexture.position = Vector2(x, y)
