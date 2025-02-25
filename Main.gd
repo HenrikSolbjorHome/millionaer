@@ -758,12 +758,21 @@ func bid_button():
 
 func _on_pledge_button_up():
 	if street[activeCard-1].type == "Street" or street[activeCard-1].type == "boat" or street[activeCard-1].type == "airport":
-		print(cardHolders)
-		var card_holder = cardHolders[str(activeCard)]
-		street[activeCard-1].pledged = true
-		
-		var card_path = str(street[activeCard-1].pledgedCard)
-		var sprite = load(card_path)
-		
-		card_holder.texture = sprite
-		print(card_holder.texture)
+		if street[activeCard-1].pledged == false:
+			var card_holder = cardHolders[str(activeCard)]
+			street[activeCard-1].pledged = true
+			playerList[currentPlayer-1].money += street[activeCard-1].price / 2
+			var card_path = str(street[activeCard-1].pledgedCard)
+			var sprite = load(card_path)
+			
+			card_holder.texture = sprite
+			updateScreen()
+		else:
+			var card_holder = cardHolders[str(activeCard)]
+			street[activeCard-1].pledged = false
+			playerList[currentPlayer-1].money -= street[activeCard-1].price / 2
+			var card_path = str(street[activeCard-1].card)
+			var sprite = load(card_path)
+			
+			card_holder.texture = sprite
+			updateScreen()
