@@ -23,7 +23,7 @@ var propertyCards = []
 var propertyCardsOwned = []
 var playerData = []
 var dice = []
-var cardHolders = []
+var cardHolders = {}
 var street = []
 var carlist = []
 var selected = 0
@@ -95,6 +95,7 @@ class streets:
 	var streetNumber: int
 	var owner: int
 	var card
+	var pledgedCard
 	
 	func getStreetNumber():
 		return streetNumber
@@ -115,7 +116,7 @@ class streetRow extends streets:
 	var pledged: bool
 	var type = "Street"
 	var housePrice: int
-	func _init(_owner, _streetNumber, _row, _rowNumbers, _rent, _house1, _house2, _house3, _house4, _house5, _pledged, _price, _housePrice, _card):
+	func _init(_owner, _streetNumber, _row, _rowNumbers, _rent, _house1, _house2, _house3, _house4, _house5, _pledged, _price, _housePrice, _card, _pledgedCard):
 		owner = _owner
 		streetNumber = _streetNumber
 		row = row
@@ -130,7 +131,7 @@ class streetRow extends streets:
 		price = _price
 		housePrice = _housePrice
 		card = _card
-		
+		pledgedCard = _pledgedCard
 class streetSpecial extends streets:
 	var rowNumbers = []
 	var price: int
@@ -141,7 +142,7 @@ class streetSpecial extends streets:
 	var pledged: bool
 	var type = "boat"
 	
-	func _init(_owner, _streetNumber, _rowNumbers, _one, _two, _three, _four, _pledged, _price, _card):
+	func _init(_owner, _streetNumber, _rowNumbers, _one, _two, _three, _four, _pledged, _price, _card, _pledgedCard):
 		owner = _owner
 		streetNumber = _streetNumber
 		rowNumbers = _rowNumbers
@@ -152,6 +153,7 @@ class streetSpecial extends streets:
 		pledged = _pledged
 		price = _price
 		card = _card
+		pledgedCard = _pledgedCard
 	
 
 	
@@ -163,7 +165,7 @@ class streetAirport extends streets:
 	var pledged: bool
 	var type = "airport"
 	
-	func _init(_owner, _streetNumber, _rowNumbers, _one, _two, _pledged, _price, _card):
+	func _init(_owner, _streetNumber, _rowNumbers, _one, _two, _pledged, _price, _card, _pledgedCard):
 		owner = _owner
 		streetNumber = _streetNumber
 		rowNumbers = _rowNumbers
@@ -172,6 +174,7 @@ class streetAirport extends streets:
 		pledged = _pledged
 		price = _price
 		card = _card
+		pledgedCard = _pledgedCard
 	
 
 
@@ -203,45 +206,45 @@ func _ready():
 	#				owner, street number, row, rownumbers, rent, house1, house2, house3, house4, house5, pledged
 	street = [
 			misc.new(1, "start"),
-			streetRow.new(false, 2, 1, [2,3], 200, 1000, 3000, 9000, 16000, 25000, false, 6000, 5000, "res://Kort/GateKort/Omsundet-Kort.png"),
+			streetRow.new(false, 2, 1, [2,3], 200, 1000, 3000, 9000, 16000, 25000, false, 6000, 5000, "res://Kort/GateKort/Omsundet-Kort.png", "res://Kort/pantsattKort/Omsundet-Pantsatt.png"),
 			streetLuck.new(3),
-			streetRow.new(false, 4, 1, [2,3], 400, 2000, 6000, 18000, 32000, 45000, false, 6000, 5000, "res://Kort/GateKort/Rensvik-Kort.png"),
+			streetRow.new(false, 4, 1, [2,3], 400, 2000, 6000, 18000, 32000, 45000, false, 6000, 5000, "res://Kort/GateKort/Rensvik-Kort.png", "res://Kort/pantsattKort/Rensvik-Pantsatt.png"),
 			misc.new(5, "tax10"),
-			streetSpecial.new(false, 6, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Sundbåten-Kort.png"),
-			streetRow.new(false, 7, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000, 5000, "res://Kort/GateKort/Gomalandet-Kort.png"),
-			streetRow.new(false, 8, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000, 5000, "res://Kort/GateKort/Byskogen-Kort.png"),
+			streetSpecial.new(false, 6, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Sundbåten-Kort.png", "res://Kort/pantsattKort/Sundbåten-Pantsatt.png"),
+			streetRow.new(false, 7, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000, 5000, "res://Kort/GateKort/Gomalandet-Kort.png", "res://Kort/pantsattKort/Gomalandet-Pantsatt.png"),
+			streetRow.new(false, 8, 2, [7,9,10], 600, 3000, 9000, 27000, 40000, 55000, false, 10000, 5000, "res://Kort/GateKort/Byskogen-Kort.png", "res://Kort/pantsattKort/Byskogen-Pantsatt.png"),
 			streetLuck.new(9),
-			streetRow.new(false, 10, 2, [7,9,10],800, 4000, 10000, 30000, 45000, 60000, false, 12000, 5000, "res://Kort/GateKort/Dale-Kort.png"),
+			streetRow.new(false, 10, 2, [7,9,10],800, 4000, 10000, 30000, 45000, 60000, false, 12000, 5000, "res://Kort/GateKort/Dale-Kort.png", "res://Kort/pantsattKort/Dale-Pantsatt.png"),
 			misc.new(11, "jail"),
-			streetRow.new(false, 12, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000, 10000, "res://Kort/GateKort/Storskarven-Kort.png"),
-			streetRow.new(false, 13, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000, 10000, "res://Kort/GateKort/Innlandet-Kort.png"),
-			streetAirport.new(false, 14, [13, 29], 400, 1000, false, 15000, "res://Kort/GateKort/Flyplass1-Kort.png"),
-			streetRow.new(false, 15, 3, [12, 14, 15], 1200, 6000, 18000, 50000, 70000, 90000, false, 16000, 10000, "res://Kort/GateKort/Nordlandet-Kort.png"),
-			streetSpecial.new(false, 16, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Kulturfabrikken-Kort.png"),
-			streetRow.new(false, 17, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000, 10000, "res://Kort/GateKort/Atlanten-Kort.png"),
-			streetRow.new(false, 18, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000, 10000, "res://Kort/GateKort/St.Hanshaugen-Kort.png"),
+			streetRow.new(false, 12, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000, 10000, "res://Kort/GateKort/Storskarven-Kort.png", "res://Kort/pantsattKort/Storskarven-Pantsatt.png"),
+			streetRow.new(false, 13, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000, 10000, "res://Kort/GateKort/Innlandet-Kort.png", "res://Kort/pantsattKort/Innlandet-Pantsatt.png"),
+			streetAirport.new(false, 14, [13, 29], 400, 1000, false, 15000, "res://Kort/GateKort/Flyplass1-Kort.png", "res://Kort/pantsattKort/Flyplass1-Pantsatt.png"),
+			streetRow.new(false, 15, 3, [12, 14, 15], 1200, 6000, 18000, 50000, 70000, 90000, false, 16000, 10000, "res://Kort/GateKort/Nordlandet-Kort.png", "res://Kort/pantsattKort/Nordlandet-Pantsatt.png"),
+			streetSpecial.new(false, 16, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Kulturfabrikken-Kort.png", "res://Kort/pantsattKort/Kulturfabrikken-Pantsatt.png"),
+			streetRow.new(false, 17, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000, 10000, "res://Kort/GateKort/Atlanten-Kort.png", "res://Kort/pantsattKort/Atlanten-Pantsatt.png"),
+			streetRow.new(false, 18, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000, 10000, "res://Kort/GateKort/St.Hanshaugen-Kort.png", "res://Kort/pantsattKort/St-Pantsatt-Kort.png"),
 			streetLuck.new(19),
-			streetRow.new(false, 20, 4, [17, 19, 20], 1600, 8000, 22000, 60000, 80000, 100000, false, 20000, 10000, "res://Kort/GateKort/Campus-Kort.png"),
+			streetRow.new(false, 20, 4, [17, 19, 20], 1600, 8000, 22000, 60000, 80000, 100000, false, 20000, 10000, "res://Kort/GateKort/Campus-Kort.png", "res://Kort/pantsattKort/Campus-Pantsatt.png"),
 			misc.new(21, "traficlight"),
-			streetRow.new(false, 22, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000, 15000, "res://Kort/GateKort/Ivar Aasens Gate-Kort.png"),
-			streetRow.new(false, 23, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000, 15000, "res://Kort/GateKort/Kaibakken-Kort.png"),
+			streetRow.new(false, 22, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000, 15000, "res://Kort/GateKort/Ivar Aasens Gate-Kort.png", "res://Kort/pantsattKort/Ivar-Pantsatt Gate-Kort.png"),
+			streetRow.new(false, 23, 5, [22, 24, 25], 1800, 9000, 25000, 70000, 87500, 105000, false, 22000, 15000, "res://Kort/GateKort/Kaibakken-Kort.png", "res://Kort/pantsattKort/Kaibakken-Pantsatt.png"),
 			streetLuck.new(24),
-			streetRow.new(false, 25, 5, [22, 24, 25], 2000, 10000, 30000, 75000, 92500, 110000, false, 24000, 15000, "res://Kort/GateKort/Røsseren-Kort.png"),
-			streetSpecial.new(false, 26, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Nordmøre Stadion-Kort.png"),
-			streetRow.new(false, 27, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000, 15000, "res://Kort/GateKort/Løkkemyra-Kort.png"),
-			streetRow.new(false, 28, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000, 15000, "res://Kort/GateKort/Storkaia-Kort.png"),
-			streetAirport.new(false, 29, [13, 29], 400, 1000, false, 15000, "res://Kort/GateKort/Flyplass2-Kort.png"),
-			streetRow.new(false, 30, 6, [27, 28, 30], 2400, 12000, 36000, 85000, 102000, 120000, false, 28000, 15000, "res://Kort/GateKort/Futura-Kort.png"),
+			streetRow.new(false, 25, 5, [22, 24, 25], 2000, 10000, 30000, 75000, 92500, 110000, false, 24000, 15000, "res://Kort/GateKort/Røsseren-Kort.png", "res://Kort/pantsattKort/Røsseren-Pantsatt.png"),
+			streetSpecial.new(false, 26, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Nordmøre Stadion-Kort.png", "res://Kort/pantsattKort/Nordmøre-Pantsatt-Kort.png"),
+			streetRow.new(false, 27, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000, 15000, "res://Kort/GateKort/Løkkemyra-Kort.png", "res://Kort/pantsattKort/Løkkemyra-Pantsatt.png"),
+			streetRow.new(false, 28, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000, 15000, "res://Kort/GateKort/Storkaia-Kort.png", "res://Kort/pantsattKort/Storkaia-Pantsatt.png"),
+			streetAirport.new(false, 29, [13, 29], 400, 1000, false, 15000, "res://Kort/GateKort/Flyplass2-Kort.png", "res://Kort/pantsattKort/Flyplass2-Pantsatt.png"),
+			streetRow.new(false, 30, 6, [27, 28, 30], 2400, 12000, 36000, 85000, 102000, 120000, false, 28000, 15000, "res://Kort/GateKort/Futura-Kort.png", "res://Kort/pantsattKort/Futura-Pantsatt.png"),
 			streetLuck.new(31),
-			streetRow.new(false, 32, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000, 20000, "res://Kort/GateKort/Rådhusplassen-Kort.png"),
-			streetRow.new(false, 33, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000, 20000, "res://Kort/GateKort/GrautByen-Kort.png"),
+			streetRow.new(false, 32, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000, 20000, "res://Kort/GateKort/Rådhusplassen-Kort.png", "res://Kort/pantsattKort/Rådhusplassen-Pantsatt.png"),
+			streetRow.new(false, 33, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000, 20000, "res://Kort/GateKort/GrautByen-Kort.png", "res://Kort/pantsattKort/GrautByen-Pantsatt.png"),
 			streetLuck.new(34),
-			streetRow.new(false, 35, 7, [32, 33, 35], 2800, 15000, 45000, 100000, 120000, 140000, false, 32000, 20000, "res://Kort/GateKort/Bryggekanten-Kort.png"),
-			streetSpecial.new(false, 36, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Atlanterhavsbadet-Kort.png"),
+			streetRow.new(false, 35, 7, [32, 33, 35], 2800, 15000, 45000, 100000, 120000, 140000, false, 32000, 20000, "res://Kort/GateKort/Bryggekanten-Kort.png", "res://Kort/pantsattKort/Bryggekanten-Pantsatt.png"),
+			streetSpecial.new(false, 36, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Atlanterhavsbadet-Kort.png", "res://Kort/pantsattKort/Atlanterhavsbadet-Pantsatt.png"),
 			streetLuck.new(37),
-			streetRow.new(false, 38, 8, [38, 40], 3500, 17500, 50000, 110000, 130000, 150000, false, 35000, 20000, "res://Kort/GateKort/Olav v's Gate-Kort.png"),
+			streetRow.new(false, 38, 8, [38, 40], 3500, 17500, 50000, 110000, 130000, 150000, false, 35000, 20000, "res://Kort/GateKort/Olav v's Gate-Kort.png", "res://Kort/pantsattKort/Olav-Pantsatt's Gate-Kort.png"),
 			misc.new(39, "tax"),
-			streetRow.new(false, 40, 8, [38, 40], 5000, 20000, 60000, 140000, 170000, 200000, false, 40000, 20000, "res://Kort/GateKort/Kongens Gate-Kort.png"),
+			streetRow.new(false, 40, 8, [38, 40], 5000, 20000, 60000, 140000, 170000, 200000, false, 40000, 20000, "res://Kort/GateKort/Kongens Gate-Kort.png", "res://Kort/pantsattKort/Kongens-Pantsatt-Kort.png"),
 	]
 
 	propertyCards = [
@@ -374,7 +377,6 @@ func addPlayers():
 		
 func removePlayer(player):
 	playerlist.pop_at(player)
-	playerList.pop_at(player)
 	print("removed player: ",player)
 	players -= 1
 	for i in street.size():
@@ -641,7 +643,7 @@ func updateScreen():
 					card_holder.position = playerData[i] + Vector2i(player_offset["offset_x"], player_offset["offset_y"])
 				
 				add_child(card_holder)
-				cardHolders.append(card_holder)
+				cardHolders[str(current_position)] = card_holder
 				displayed_cards[card_path] = true
 				
 				print("playerdata:", playerData)
@@ -723,13 +725,15 @@ func pass_button():
 	if passedPlayers == players and currentBid == 0:
 		rollDiceButton.visible = !rollDiceButton.visible
 		bid.visible = !bid.visible
-	elif passedPlayers == players and currentBid != 0 and playerList[currPlayer-1].money > 0:
-		playerList[currPlayer-1].money -= currentBid
-		street[currPlayer-1].owner = currPlayer-1
-		updateScreen()
-		rollDiceButton.visible = !rollDiceButton.visible
-		bid.visible = !bid.visible
-		passedPlayers = 0
+		
+	elif passedPlayers == players and currentBid and playerList[currPlayer-1].money > 0:
+				playerList[currPlayer-1].money -= currentBid
+				street[current_position-1].owner = currPlayer
+				updateScreen()
+				rollDiceButton.visible = !rollDiceButton.visible
+				bid.visible = !bid.visible
+				passedPlayers = 0
+	
 	for i in players:
 		playerlist[i].add_theme_color_override("font_color", Color(1, 1, 1))
 	playerlist[currPlayer-1].add_theme_color_override("font_color", Color(0, 1, 0))
@@ -741,23 +745,25 @@ func bid_button():
 	var new_text = bidInput.text
 	if currPlayer > players:
 		currPlayer = 1
-	if new_text.is_valid_int():
+	if new_text.is_valid_int() and int(new_text)+1000 < playerList[currPlayer-1].money:
 		new_text = int(new_text)
 		for i in players:
 			playerlist[i].add_theme_color_override("font_color", Color(1, 1, 1))
 		playerlist[currPlayer-1].add_theme_color_override("font_color", Color(0, 1, 0))
-		currentBid = new_text
+		currentBid = new_text + 1000
 		bidInput.text = str(new_text+1000)
 		currPlayer += 1
+	passedPlayers = 0
 
 
 func _on_pledge_button_up():
 	if street[activeCard-1].type == "Street" or street[activeCard-1].type == "boat" or street[activeCard-1].type == "airport":
-		print(cardHolders[0])
-		var card_holder = cardHolders[activeCard-1]
+		print(cardHolders)
+		var card_holder = cardHolders[str(activeCard)]
 		street[activeCard-1].pledged = true
 		
-		var card_path = str(street[activeCard-1].card)
+		var card_path = str(street[activeCard-1].pledgedCard)
 		var sprite = load(card_path)
 		
 		card_holder.texture = sprite
+		print(card_holder.texture)
