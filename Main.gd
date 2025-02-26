@@ -10,6 +10,7 @@ extends Node2D
 @onready var dice1 = $Die/Dice1
 @onready var dice2 = $Die/Dice2
 @onready var action = $Action
+@onready var buyHouse = $Action/buyHouse
 @onready var winner = $Win
 @onready var winnerLabel = $Win/winnerText
 
@@ -658,13 +659,17 @@ func _on_card_clicked(event, card_holder, cardPos, card):
 			
 			if street[card-1].owner == currentPlayer:
 				action.visible = !action.visible
+				if street[card-1].type == "Street":
+					buyHouse.visible = !buyHouse.visible
+				
 				activeCard = street[card-1].streetNumber
 			
 		else:
 			card_holder.scale = Vector2(2.2, 2.2)
 			card_holder.position = cardPos
 			action.visible = false
-	
+			buyHouse.visible = false
+			
 
 func buy():
 	if currentPlayer > players:

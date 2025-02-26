@@ -379,6 +379,7 @@ scale = Vector2(2.5, 2.5)
 
 [node name="Action" type="Node2D" parent="."]
 visible = false
+z_index = 6
 
 [node name="background" type="ColorRect" parent="Action"]
 offset_left = -50483.0
@@ -388,6 +389,7 @@ offset_bottom = 49573.0
 color = Color(0.490196, 0.490196, 0.490196, 0.396078)
 
 [node name="pledge" type="Button" parent="Action"]
+visibility_layer = 17
 offset_left = -4200.0
 offset_top = -2000.0
 offset_right = -2155.0
@@ -397,6 +399,8 @@ theme_override_font_sizes/font_size = 500
 text = "Pantsett"
 
 [node name="buyHouse" type="Button" parent="Action"]
+unique_name_in_owner = true
+visible = false
 offset_left = 2000.0
 offset_top = -2000.0
 offset_right = 4091.0
