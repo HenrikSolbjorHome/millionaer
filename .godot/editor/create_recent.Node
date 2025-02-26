@@ -1,7 +1,8 @@
+ColorRect
+Timer
 TextureRect
 Label
 Node2D
-ColorRect
 Area2D
 Button
 CollisionPolygon2D

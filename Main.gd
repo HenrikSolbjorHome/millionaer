@@ -13,6 +13,8 @@ extends Node2D
 @onready var buyHouse = $Action/buyHouse
 @onready var winner = $Win
 @onready var winnerLabel = $Win/winnerText
+@onready var chanceCard = $ChanceCard
+@onready var chanceTimer = $chanceTimer
 
 
 var players
@@ -199,11 +201,12 @@ class cards:
 	var type
 	var amount
 	var message
-	func _init(_type, _amount, _message):
+	var path
+	func _init(_type, _amount, _message, _path):
 		type = _type
 		amount = _amount
 		message = _message
-		
+		path = _path
 
 func _ready():
 	#				owner, street number, row, rownumbers, rent, house1, house2, house3, house4, house5, pledged
@@ -221,7 +224,7 @@ func _ready():
 			misc.new(11, "jail"),
 			streetRow.new(false, 12, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000, 10000, "res://Kort/GateKort/Storskarven-Kort.png", "res://Kort/pantsattKort/Storskarven-Pantsatt.png"),
 			streetRow.new(false, 13, 3, [12, 14, 15], 1000, 5000, 15000, 45000, 62000, 75000, false, 14000, 10000, "res://Kort/GateKort/Innlandet-Kort.png", "res://Kort/pantsattKort/Innlandet-Pantsatt.png"),
-			streetAirport.new(false, 14, [13, 29], 400, 1000, false, 15000, "res://Kort/GateKort/Flyplass1-Kort.png", "res://Kort/pantsattKort/Flyplass1-Pantsatt.png"),
+			streetAirport.new(false, 14, [13, 29], 400, 1000, false, 15000, "res://Kort/GateKort/Flyplass1-Kort.png", "res://Kort/pantsattKort/Caroline Kino-Pantsatt.png"),
 			streetRow.new(false, 15, 3, [12, 14, 15], 1200, 6000, 18000, 50000, 70000, 90000, false, 16000, 10000, "res://Kort/GateKort/Nordlandet-Kort.png", "res://Kort/pantsattKort/Nordlandet-Pantsatt.png"),
 			streetSpecial.new(false, 16, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Kulturfabrikken-Kort.png", "res://Kort/pantsattKort/Kulturfabrikken-Pantsatt.png"),
 			streetRow.new(false, 17, 4, [17, 19, 20], 1400, 7000, 20000, 55000, 75000, 95000, false, 18000, 10000, "res://Kort/GateKort/Atlanten-Kort.png", "res://Kort/pantsattKort/Atlanten-Pantsatt.png"),
@@ -236,7 +239,7 @@ func _ready():
 			streetSpecial.new(false, 26, [6, 16, 26, 36], 2500, 5000, 10000, 20000, false, 20000, "res://Kort/GateKort/Nordmøre Stadion-Kort.png", "res://Kort/pantsattKort/Nordmøre-Pantsatt-Kort.png"),
 			streetRow.new(false, 27, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000, 15000, "res://Kort/GateKort/Løkkemyra-Kort.png", "res://Kort/pantsattKort/Løkkemyra-Pantsatt.png"),
 			streetRow.new(false, 28, 6, [27, 28, 30], 2200, 11000, 33000, 80000, 97500, 115000, false, 26000, 15000, "res://Kort/GateKort/Storkaia-Kort.png", "res://Kort/pantsattKort/Storkaia-Pantsatt.png"),
-			streetAirport.new(false, 29, [13, 29], 400, 1000, false, 15000, "res://Kort/GateKort/Flyplass2-Kort.png", "res://Kort/pantsattKort/Flyplass2-Pantsatt.png"),
+			streetAirport.new(false, 29, [13, 29], 400, 1000, false, 15000, "res://Kort/GateKort/Flyplass2-Kort.png", "res://Kort/pantsattKort/Kvernberget-Pantsatt.png"),
 			streetRow.new(false, 30, 6, [27, 28, 30], 2400, 12000, 36000, 85000, 102000, 120000, false, 28000, 15000, "res://Kort/GateKort/Futura-Kort.png", "res://Kort/pantsattKort/Futura-Pantsatt.png"),
 			streetLuck.new(31),
 			streetRow.new(false, 32, 7, [32, 33, 35], 2600, 13000, 39000, 90000, 110000, 127500, false, 30000, 20000, "res://Kort/GateKort/Rådhusplassen-Kort.png", "res://Kort/pantsattKort/Rådhusplassen-Pantsatt.png"),
@@ -255,23 +258,23 @@ func _ready():
 	]
 	
 	cardList = [
-		cards.new("get", 30_000, "Du får Damm-prisen for landets mest lovende Millionær-aspirant Motta kr. 30.000"),
-		cards.new("get", 15_000, "Du selger aksjer og mottar kr. 15.000."),
-		cards.new("get", 10_000, "Motta fra onkel i Amerika kr. 10.000."),
-		cards.new("get", 10_000, "Du har 5 rette I Lotto og får utbetalt kr. 10.000."),
-		cards.new("get", 10_000, "Etter tante Olga på Toten har du arvet 4 katter, en grønn papegøye, 16 juletrær på rot (uten pynt) og kr. 10.000 som utbetales av banken."),
-		cards.new("get", 10_000, "Du har vunnet I Pengelotteriet. Motta kr. 10.000"),
-		cards.new("get", 10_000, "Din premieobligasjon er blitt trukket ut. Motta kr. 10.000"),
-		cards.new("get", 5_000, "Du har en 11'er og fire 10'ere I tipping og har utbetalt kr. 5.000."),
-		cards.new("get", 5_000, "Du har kjøpt et maleri på loppemarked, og selger det videre med kr. 5.000 I fortjenste som utbetales av banken."),
-		cards.new("get", 5_000, "I anledning av bankens 100 års jubileum, utbetales kr. 5.000 I ekstra bonus."),
-		cards.new("get", 2_500, "Ligninen er lagt ut, og du får kr. 2.500 igjen på skatten."),
-		cards.new("get", 2_000, "Du får julegratiale med kr. 2.000."),
-		cards.new("get", 500, "Du har vunnet kr. 500 på travbanen."),
+		cards.new("get", 30_000, "Du får Damm-prisen for landets mest lovende Millionær-aspirant Motta kr. 30.000", "res://Kort/SpørsmålKort/0-Kort.png"),
+		cards.new("get", 15_000, "Du selger aksjer og mottar kr. 15.000.", "res://Kort/SpørsmålKort/1-Kort.png"),
+		cards.new("get", 10_000, "Motta fra onkel i Amerika kr. 10.000.", "res://Kort/SpørsmålKort/2-Kort.png"),
+		cards.new("get", 10_000, "Du har 5 rette I Lotto og får utbetalt kr. 10.000.", "res://Kort/SpørsmålKort/3-Kort.png"),
+		cards.new("get", 10_000, "Etter tante Olga på Toten har du arvet 4 katter, en grønn papegøye, 16 juletrær på rot (uten pynt) og kr. 10.000 som utbetales av banken.", "res://Kort/SpørsmålKort/4-Kort.png"),
+		cards.new("get", 10_000, "Du har vunnet I Pengelotteriet. Motta kr. 10.000", "res://Kort/SpørsmålKort/5-kort.png"),
+		cards.new("get", 10_000, "Din premieobligasjon er blitt trukket ut. Motta kr. 10.000", "res://Kort/SpørsmålKort/6-Kort.png"),
+		cards.new("get", 5_000, "Du har en 11'er og fire 10'ere I tipping og har utbetalt kr. 5.000.", "res://Kort/SpørsmålKort/7-Kort.png"),
+		cards.new("get", 5_000, "Du har kjøpt et maleri på loppemarked, og selger det videre med kr. 5.000 I fortjenste som utbetales av banken.", "res://Kort/SpørsmålKort/8-Kort.png"),
+		cards.new("get", 5_000, "I anledning av bankens 100 års jubileum, utbetales kr. 5.000 I ekstra bonus.", "res://Kort/SpørsmålKort/9-Kort.png"),
+		cards.new("get", 2_500, "Ligninen er lagt ut, og du får kr. 2.500 igjen på skatten.", "res://Kort/SpørsmålKort/10-Kort.png"),
+		cards.new("get", 2_000, "Du får julegratiale med kr. 2.000.", "res://Kort/SpørsmålKort/11-Kort.png"),
+		cards.new("get", 500, "Du har vunnet kr. 500 på travbanen.", "res://Kort/SpørsmålKort/12-Kort.png"),
 		
-		cards.new("pay", 7_500, "Ligninen er lagt ut. Betal restskatt med kr. 7.500"),
-		cards.new("pay", 2_000, "Betal eiendomskatt og avgifter med kr. 2.000."),
-		cards.new("pay", 1_000, "Du er tatt I radarkontroll og må betale kr. 1.000 I bot for fartsoverskridelsen."),
+		cards.new("pay", 7_500, "Ligninen er lagt ut. Betal restskatt med kr. 7.500", "res://Kort/SpørsmålKort/Kort-20.png"),
+		cards.new("pay", 2_000, "Betal eiendomskatt og avgifter med kr. 2.000.", "res://Kort/SpørsmålKort/Kort-19.png"),
+		cards.new("pay", 1_000, "Du er tatt I radarkontroll og må betale kr. 1.000 I bot for fartsoverskridelsen.", "res://Kort/SpørsmålKort/Kort-18.png"),
 	]
 	
 	dice = [
@@ -592,8 +595,11 @@ func checkStreet():
 				playerList[currentPlayer].skipTurns = 3
 		"luck":
 			if cardList.size() > 0:
+				chanceTimer.start(2)
 				var card = rngCard.randi_range(1,cardList.size()-1)
+				chanceCard.visible = true
 				usedCardList.append(cardList[card-1])
+				chanceCard.texture = load(cardList[card-1].path)
 				match cardList[card-1].type:
 					"pay":
 						activePlayer.money -= cardList[card-1].amount
@@ -750,14 +756,15 @@ func _on_pledge_button_up():
 			card_holder.texture = sprite
 			updateScreen()
 		else:
-			var card_holder = cardHolders[str(activeCard)]
-			street[activeCard-1].pledged = false
-			playerList[currentPlayer-1].money -= street[activeCard-1].price / 2
-			var card_path = str(street[activeCard-1].card)
-			var sprite = load(card_path)
-			
-			card_holder.texture = sprite
-			updateScreen()
+			if playerList[currentPlayer-1].money > street[activeCard-1].price / 2:
+				var card_holder = cardHolders[str(activeCard)]
+				street[activeCard-1].pledged = false
+				playerList[currentPlayer-1].money -= street[activeCard-1].price / 2
+				var card_path = str(street[activeCard-1].card)
+				var sprite = load(card_path)
+				
+				card_holder.texture = sprite
+				updateScreen()
 
 
 func _on_buy_house_button_up():
@@ -766,7 +773,7 @@ func _on_buy_house_button_up():
 		for i in street[activeCard-1].rowNumbers:
 			if street[i-1].owner == currentPlayer:
 				streetsOwnedDisp.append(i)
-		if streetsOwnedDisp != street[activeCard-1].rowNumbers:
+		if streetsOwnedDisp == street[activeCard-1].rowNumbers:
 			if street[activeCard-1].houses != 5:
 				street[activeCard-1].houses += 1
 				playerList[currentPlayer-1].money -= street[activeCard-1].housePrice
@@ -806,3 +813,7 @@ func _on_buy_house_button_up():
 			street[activeCard-1].houseTexture.rotation = angle - PI
 			print(angle-PI)
 			street[activeCard-1].houseTexture.position = Vector2(x, y)
+
+
+func _on_chance_timer_timeout():
+	chanceCard.visible = false
