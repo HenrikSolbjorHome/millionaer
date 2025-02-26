@@ -15,6 +15,9 @@ extends Node2D
 @onready var winnerLabel = $Win/winnerText
 @onready var chanceCard = $ChanceCard
 @onready var chanceTimer = $chanceTimer
+@onready var loserLabel = $lose/losertext
+@onready var loser = $lose
+@onready var loserTimer = $loseTimer
 
 
 var players
@@ -386,6 +389,9 @@ func removePlayer(playerID):
 	for i in street.size():
 		if street[i].owner == playerID:
 			street[i].owner = false
+	loser.visible = true
+	loserLabel.text = "Player %s Lost" % [playerID+1]
+	loserTimer.start(3)
 	
 func checkPlayers():
 	for i in players:
@@ -817,3 +823,7 @@ func _on_buy_house_button_up():
 
 func _on_chance_timer_timeout():
 	chanceCard.visible = false
+
+
+func _on_lose_timer_timeout():
+	loser.visible = false

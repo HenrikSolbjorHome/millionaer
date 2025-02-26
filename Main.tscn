@@ -425,6 +425,32 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 500
 text = "Kjøp hus"
 
+[node name="lose" type="Node2D" parent="."]
+visible = false
+
+[node name="background" type="ColorRect" parent="lose"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3523.0
+offset_top = -1241.0
+offset_right = 3417.0
+offset_bottom = 1242.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.686275)
+
+[node name="losertext" type="Label" parent="lose"]
+unique_name_in_owner = true
+offset_left = -3353.0
+offset_top = -651.0
+offset_right = 3223.0
+offset_bottom = 714.0
+theme_override_font_sizes/font_size = 1000
+text = "Player Won!"
+
 [node name="Win" type="Node2D" parent="."]
 visible = false
 
@@ -479,6 +505,9 @@ color = Color(0.490196, 0.490196, 0.490196, 0.396078)
 [node name="chanceTimer" type="Timer" parent="."]
 unique_name_in_owner = true
 
+[node name="loseTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+
 [connection signal="camera" from="." to="Camera2D" method="_on_node_2d_camera"]
 [connection signal="cameraMain" from="." to="Camera2D" method="_on_node_2d_camera_main"]
 [connection signal="button_up" from="Done" to="." method="done"]
@@ -505,3 +534,4 @@ unique_name_in_owner = true
 [connection signal="button_up" from="Action/pledge" to="." method="_on_pledge_button_up"]
 [connection signal="button_up" from="Action/buyHouse" to="." method="_on_buy_house_button_up"]
 [connection signal="timeout" from="chanceTimer" to="." method="_on_chance_timer_timeout"]
+[connection signal="timeout" from="loseTimer" to="." method="_on_lose_timer_timeout"]
