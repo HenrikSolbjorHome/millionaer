@@ -55,7 +55,7 @@ offset_top = -6500.0
 offset_right = 1017.5
 offset_bottom = -5550.0
 theme_override_font_sizes/font_size = 500
-text = "Done"
+text = "Ferdig"
 
 [node name="rollDice" type="Button" parent="."]
 unique_name_in_owner = true
@@ -71,7 +71,7 @@ offset_bottom = -5550.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 500
-text = "Roll dice"
+text = "Rull terning"
 metadata/_edit_use_anchors_ = true
 
 [node name="Auction" type="Button" parent="."]
@@ -82,7 +82,7 @@ offset_top = -6500.0
 offset_right = -1845.0
 offset_bottom = -5550.0
 theme_override_font_sizes/font_size = 500
-text = "Auction"
+text = "auksjon"
 
 [node name="Buy" type="Button" parent="."]
 unique_name_in_owner = true
@@ -92,7 +92,7 @@ offset_top = -6500.0
 offset_right = 3947.0
 offset_bottom = -5550.0
 theme_override_font_sizes/font_size = 500
-text = "Buy"
+text = "kjøp"
 
 [node name="bid" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -104,7 +104,7 @@ offset_top = -6508.0
 offset_right = -2894.0
 offset_bottom = -5558.0
 theme_override_font_sizes/font_size = 500
-text = "Bid: "
+text = "Bud: "
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -133,7 +133,7 @@ offset_top = -6500.0
 offset_right = 524.0
 offset_bottom = -5550.0
 theme_override_font_sizes/font_size = 500
-text = "Bid"
+text = "By"
 
 [node name="PlayerSelect" type="Node2D" parent="."]
 
@@ -148,7 +148,7 @@ offset_top = -46260.0
 offset_right = 13743.0
 offset_bottom = -44895.0
 theme_override_font_sizes/font_size = 1000
-text = "Choose players"
+text = "Velg antall spillere"
 
 [node name="3player" type="Button" parent="PlayerSelect"]
 offset_left = 10788.4
@@ -324,8 +324,7 @@ offset_right = -2263.0
 offset_bottom = 2253.0
 theme_override_font_sizes/font_size = 1000
 theme_override_styles/normal = SubResource("StyleBoxFlat_t68mv")
-text = "Exit
-"
+text = "Avslutt"
 alignment = 0
 metadata/_edit_use_anchors_ = true
 
@@ -339,7 +338,7 @@ offset_right = -812.0
 offset_bottom = 458.5
 theme_override_font_sizes/font_size = 1000
 theme_override_styles/normal = SubResource("StyleBoxFlat_c3ook")
-text = "Settings"
+text = "Innstillinger"
 metadata/_edit_use_anchors_ = true
 
 [node name="Play" type="Button" parent="Main_menu"]
@@ -351,7 +350,7 @@ scale = Vector2(1.00089, 1)
 theme = SubResource("Theme_fji62")
 theme_override_font_sizes/font_size = 1000
 theme_override_styles/normal = SubResource("StyleBoxFlat_spn15")
-text = "PLAY"
+text = "SPILL"
 metadata/_edit_use_anchors_ = true
 
 [node name="Sprite2D2" type="Sprite2D" parent="Main_menu"]
@@ -380,7 +379,7 @@ offset_bottom = -18300.0
 scale = Vector2(1.543, 1)
 theme_override_font_sizes/font_size = 500
 theme_override_styles/normal = SubResource("StyleBoxFlat_02ooa")
-text = "Back"
+text = "Tilbake"
 
 [node name="Die" type="Node2D" parent="."]
 position = Vector2(0, -2854)

@@ -380,7 +380,7 @@ func addPlayers():
 		playerlist[i] = Label.new()
 		add_child(playerlist[i])
 		playerlist[i].position = playerData[i]
-		playerlist[i].text = "Player %s \n%s \nMoney: %s" % [i+1, carlist[i], playerList[i].money]
+		playerlist[i].text = "Spiller %s \n%s \nPenger: %s" % [i+1, carlist[i], playerList[i].money]
 		playerlist[i].add_theme_font_size_override("font_size", 300)
 		
 func removePlayer(playerID):
@@ -390,7 +390,7 @@ func removePlayer(playerID):
 		if street[i].owner == playerID:
 			street[i].owner = false
 	loser.visible = true
-	loserLabel.text = "Player %s Lost" % [playerID+1]
+	loserLabel.text = "Spiller %s Tapte" % [playerID+1]
 	loserTimer.start(3)
 	
 func checkPlayers():
@@ -405,7 +405,7 @@ func checkPlayers():
 
 func win(playerID):
 	winner.visible = true
-	winnerLabel.text = "Player %s Won" % [playerID]
+	winnerLabel.text = "Spiller %s Vant" % [playerID]
 
 func car():
 	var startpos =  Vector2(-1300,4660)
@@ -522,8 +522,6 @@ func checkStreet():
 							for i in current_street.rowNumbers:
 								if street[i-1].owner == currentPlayer:
 									streetsOwned += 1
-								
-								# TODO: fix street check
 								
 							match current_street.houses:
 								0:
@@ -779,7 +777,7 @@ func _on_buy_house_button_up():
 		for i in street[activeCard-1].rowNumbers:
 			if street[i-1].owner == currentPlayer:
 				streetsOwnedDisp.append(i)
-		if streetsOwnedDisp == street[activeCard-1].rowNumbers:
+		if streetsOwnedDisp != street[activeCard-1].rowNumbers:
 			if street[activeCard-1].houses != 5:
 				street[activeCard-1].houses += 1
 				playerList[currentPlayer-1].money -= street[activeCard-1].housePrice
@@ -823,7 +821,6 @@ func _on_buy_house_button_up():
 
 func _on_chance_timer_timeout():
 	chanceCard.visible = false
-
 
 func _on_lose_timer_timeout():
 	loser.visible = false
